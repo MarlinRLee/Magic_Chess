@@ -144,9 +144,19 @@ def Summon_move(Card):
 
 def Promotion_Attack(Card):
     options = []
-    color = 'White' if Card.board.game.turn == 'Black' else 'Black'
+    color = 'White' if Card.team_color == 'Black' else 'Black'
     for square_list in Card.board.squares:
         for square in square_list:
             if valid_attack(Card.board, square.x, square.y, color):
                 options.append([square, square.occupying_piece])
+    return options
+
+
+def Destroy_Attack(Card):
+    options = []
+    for square_list in Card.board.squares:
+        for square in square_list:
+            if valid_attack(Card.board, square.x, square.y, Card.team_color):
+                if square.occupying_piece.name != "K":
+                    options.append([square, square.occupying_piece])
     return options

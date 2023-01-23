@@ -4,6 +4,7 @@ import random
 
 from magic.pyclass.Summon_piece import Summon_piece
 from magic.pyclass.Give_move import Give_move
+from magic.pyclass.Destroy_piece import Destroy_piece
 from chess.pyclass.Pawn import Pawn
 from chess.pyclass.Basic_units import Knight, Rook, Bishop, Queen
 
@@ -56,11 +57,12 @@ class Hand:
     def add_rand_card(self):
         #Give_move
         #Summon_piece
-        summon_card = bool(random.getrandbits(1))
-        if summon_card:
+        #Destroy_piece
+        summon_card = random.randint(0, 2)
+        if summon_card == 0:
             MV, gen_class = random.choice(((3, Knight), (5, Rook), (3, Bishop), (9, Queen)))
             new_card = Summon_piece(self, "Create Unit", MV, gen_class)
-        else:
+        elif summon_card == 1:
             add_Attack = bool(random.getrandbits(1))
             if add_Attack:
                 MV, attack_add = random.choice(((4, Bishop_Attack), (2, King_Attack), 
@@ -72,12 +74,13 @@ class Hand:
                                                 (5, Knight_Move), (1, Pawn_Move),
                                                 (8, Rook_Move)))
                 new_card = Give_move(self, "Upgrade Unit", MV, move_add, False)
+        else:
+            new_card = Destroy_piece(self, "Destroy Unit", 4)
         self.cards.append(new_card)
 
     def start_turn(self):
         self.max_mv += 1
         self.mv = self.max_mv
-        print(self.mv)
         if len(self.cards) < self.hand_size:
             self.add_rand_card()
 
