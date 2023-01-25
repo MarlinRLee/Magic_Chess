@@ -6,6 +6,7 @@ from magic.pyclass.Summon_piece import Summon_piece
 from magic.pyclass.Give_move import Give_move
 from magic.pyclass.Destroy_piece import Destroy_piece
 from chess.pyclass.Pawn import Pawn
+from chess.pyclass.King import King
 from chess.pyclass.Basic_units import Knight, Rook, Bishop, Queen
 
 from chess.pyclass.Moves import (Bishop_Move, Bishop_Attack, King_Move, King_Attack,
@@ -19,7 +20,7 @@ class Hand:
 
         self.color = color
         self.hand_size = hand_size
-        self.max_mv = 0
+        self.max_mv = 1
         self.mv = self.max_mv
 
 
@@ -58,21 +59,21 @@ class Hand:
         #Give_move
         #Summon_piece
         #Destroy_piece
-        summon_card = random.randint(0, 2)
-        if summon_card == 0:
-            MV, gen_class = random.choice(((3, Knight), (5, Rook), (3, Bishop), (9, Queen)))
+        summon_card = 0#random.randint(0, 9)
+        if 0 <= summon_card <= 4:
+            MV, gen_class = random.choice(((3, Knight), (5, Rook), (3, Bishop), (9, Queen), (4, King)))
             new_card = Summon_piece(self, "Create Unit", MV, gen_class)
-        elif summon_card == 1:
+        elif 5 <= summon_card <= 6:
             add_Attack = bool(random.getrandbits(1))
             if add_Attack:
-                MV, attack_add = random.choice(((4, Bishop_Attack), (2, King_Attack), 
-                                                (3, Knight_Attack), (3, Pawn_Attack),
+                MV, attack_add = random.choice(((3, Bishop_Attack), (3, King_Attack), 
+                                                (3, Knight_Attack), (1, Pawn_Attack),
                                                 (4, Rook_Attack)))
                 new_card = Give_move(self, "Upgrade Unit", MV, attack_add, True)
             else:
-                MV, move_add = random.choice(((7, Bishop_Move), (3, King_Move), 
-                                                (5, Knight_Move), (1, Pawn_Move),
-                                                (8, Rook_Move)))
+                MV, move_add = random.choice(((2, Bishop_Move), (2, King_Move), 
+                                                (2, Knight_Move), (1, Pawn_Move),
+                                                (3, Rook_Move)))
                 new_card = Give_move(self, "Upgrade Unit", MV, move_add, False)
         else:
             new_card = Destroy_piece(self, "Destroy Unit", 4)

@@ -32,6 +32,7 @@ class game():
         for Hand in self.game_objects[1:]:
             if Hand.color == self.turn:
                 Hand.start_turn()
+
         #time.sleep(2)
 
 
