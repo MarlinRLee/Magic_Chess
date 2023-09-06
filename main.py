@@ -32,5 +32,5 @@ if __name__ == '__main__':
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_RETURN:
 					game.selected_piece = None   
-		# Draw the board
+		# Draw the Board
 		draw(screen)

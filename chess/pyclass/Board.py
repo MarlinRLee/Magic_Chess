@@ -4,10 +4,9 @@ import random
 # Game state checker
 from chess.pyclass.Square import Square
 from chess.pyclass.Piece import Piece
-from magic.pyclass.Card import Card
 
 class Board:
-    def __init__(self, board_size, off_Set, game, size = 8):
+    def __init__(self, board_size, off_Set, game, size_x = 8, size_y = 8):
 
         self.game = game
 
@@ -16,40 +15,38 @@ class Board:
         self.bounds = [[x_offset, x_offset + width], 
                         [y_offset, y_offset + height]]
 
-        self.size = size
+        self.size_x = size_x
+        self.size_y = size_y
         self.offset = (x_offset, y_offset)
         self.height = height
-        self.tile_width = width // size
-        self.tile_height = height // size
+        self.tile_width = width // size_x
+        self.tile_height = height // size_y
 
         self.squares = self.generate_squares()
-        self.History = [[None]]
-        
-        self.setup_board()
 
     def generate_squares(self):
         output = []
-        for x in range(self.size):
+        for x in range(self.size_x):
             output.append([])
-            for y in range(self.size):
+            for y in range(self.size_y):
                 output[x].append(
-                    Square(x, y, self.tile_width, self.tile_height, self.offset)
+                    Square(x, y, self.tile_width, self.tile_height, self.offset, self)
                 )
         return output
 
     def setup_board(self):
-        for color, row in [("White", 0), ("Black", self.size - 1)]:
-            self.squares[self.size//2][row].occupying_piece = Piece(self.size//2, row, color, 
+        for color, row in [("White", 0), ("Black", self.size_y - 1)]:
+            self.squares[self.size_y//2][row].occupying_piece = Piece(self.size_x//2, row, color, 
                                                                     self, "K")
 
     def inbound(self,x,y):
-        return 0 <= x < self.size and 0 <= y < self.size
+        return 0 <= x < self.size_x and 0 <= y < self.size_y
 
     def pix_to_cord(self, pix_pos):
         pix_x, pix_y = pix_pos
         x = (pix_x - self.offset[0]) // self.tile_width
         y = (pix_y - self.offset[1]) // self.tile_height
-        return x, y
+        return int(x), int(y)
 
     def handle_click(self, click_pos):
         x, y = self.pix_to_cord(click_pos)
@@ -60,28 +57,24 @@ class Board:
     def act(self, clicked_square):
         #may be None
         clicked_piece = clicked_square.occupying_piece
-        card_to_cast = (isinstance(self.game.selected_piece, Card))
         if (clicked_piece is not None and 
-            clicked_piece.color == self.game.turn and
-            not card_to_cast):
+            self.game.selected_piece is None):
             self.game.selected_piece = clicked_piece
+            return None
 
         if self.game.selected_piece is None:
             return None
 
-        to_move_piece = self.game.selected_piece
-        for square in to_move_piece.move_options():
-            if square is clicked_square:
-                to_move_piece.move_piece(clicked_square)
-                return None
-            
-        for square, piece in to_move_piece.attack_options():
-            if square is clicked_square:
-                to_move_piece.move_piece(clicked_square, piece)
-                return None
+        self.game.selected_piece.move_piece(clicked_square)
+
         return None
 
     def draw(self, display):
         for square_row in self.squares:
             for square in square_row:
                 square.draw(display)
+                
+    def Draw_Select(self, display):
+        s_piece = self.game.selected_piece
+        self.squares[0][0].occupying_piece = s_piece
+        self.squares[0][0].draw(display)

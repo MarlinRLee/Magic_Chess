@@ -7,7 +7,7 @@ class Card:#.__class__.__name__
     def __init__(self, hand, Name, mv, pix, Text_Box):
         self.Name = Name
         self.mv = mv
-        self.board = hand.game.Board
+        self.Board = hand.game.Board
         self.hand = hand
         self.team_color = hand.color
 
@@ -24,13 +24,13 @@ class Card:#.__class__.__name__
     def init_back_img(self, card_width, height):
         draw_obj = []
         bliz_obj = []
-        boarder_color = (150, 75, 0)
-        boarder = pygame.Rect(
+        Boarder_color = (150, 75, 0)
+        Boarder = pygame.Rect(
             (card_width//42),
             (height//48),
             card_width - (card_width//21),
             height - (height//24))
-        draw_obj.append([boarder_color, boarder])
+        draw_obj.append([Boarder_color, Boarder])
         return (draw_obj, bliz_obj)
 
 
@@ -38,14 +38,14 @@ class Card:#.__class__.__name__
     def init_front_img(self, card_width, height, Name, mv, pix, Text_Box):
         draw_obj = []
         bliz_obj = []
-        #boarder plot
-        boarder_color = (150, 75, 0)
-        boarder = pygame.Rect(
+        #Boarder plot
+        Boarder_color = (150, 75, 0)
+        Boarder = pygame.Rect(
             (card_width//42),
             (height//48),
             card_width - (card_width//21),
             height - (height//24))
-        draw_obj.append([boarder_color, boarder])
+        draw_obj.append([Boarder_color, Boarder])
 
         #main rect
         inside_color = (255, 0, 0)
@@ -114,21 +114,8 @@ class Card:#.__class__.__name__
     def set_highlight(self,):
         self.highlight = True
 
-    def attack_options(self):
-        options = []
-        for attack_func in self.added_attacks:
-            options += attack_func(self)
-        return options
-
-    def move_options(self):
-        options = []
-        for move_func in self.added_moves:
-            options += move_func(self)
-        return options
-
     def move_piece(self, square):
-        self.hand.mv -= self.mv
-        self.board.game.selected_piece = None
+        self.Board.game.selected_piece = None
         self.hand.cards.remove(self)
 
     def draw(self, display, Card_num = None):
