@@ -7,7 +7,7 @@ class Card:#.__class__.__name__
     def __init__(self, hand, Name, mv, pix, Text_Box):
         self.Name = Name
         self.mv = mv
-        self.board = hand.game.game_objects[0]
+        self.board = hand.game.Board
         self.hand = hand
         self.team_color = hand.color
 
@@ -108,9 +108,10 @@ class Card:#.__class__.__name__
 
     def act(self, game):
         game.selected_piece = self
+        game.Hands[2].cards[0] = self
         pass
 
-    def set_highlight(self):
+    def set_highlight(self,):
         self.highlight = True
 
     def attack_options(self):

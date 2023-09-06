@@ -32,12 +32,5 @@ if __name__ == '__main__':
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_RETURN:
 					game.selected_piece = None   
-		if game.life[1] < 1: # If black is in checkmate
-			print('White wins!')
-			running = False
-		elif game.life[0] < 1: # If white is in checkmate
-			print('Black wins!')
-			running = False
 		# Draw the board
 		draw(screen)
-	print(game.game_objects[0].History)

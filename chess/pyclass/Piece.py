@@ -35,31 +35,11 @@ class Piece:
     def set_highlight(self, default: bool = True) -> None:
         (self.board.squares[self.x][self.y]).set_highlight(default)
 
-    def remove(self) -> None:
-        """handle special behavior of removed units. currently only kings have special behvior"""
-        self.dead = True
-        self.board.squares[self.x][self.y].occupying_piece = None
-
-    #get list of moves the piece can make
-    def move_options(self):
-        options = []
-        for move_funcs in self.added_moves:
-            options += move_funcs(self)
-        return options
-
-    #get list of attacks the piece can make
-    def attack_options(self):
-        options = []
-        for attack_func in self.added_attacks:
-            options += attack_func(self)
-        return options
-
     #moves the piece and handle all the acounting
     def move_piece(self, square: Square, cap_piece = None):
         #add to the history log
         start_square = self.board.squares[self.x][self.y]
         move = (self.name, [start_square.x, start_square.y], [square.x, square.y])
-        self.board.History.append(move)
 
         #remove dead piece
         if cap_piece is not None:
@@ -67,4 +47,3 @@ class Piece:
         
         #move the piece and end the turn
         self.move(square.x, square.y)
-        self.board.game.end_turn()

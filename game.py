@@ -9,37 +9,61 @@ class game():
         self.box_font = self.font
         self.turn = 'White'
         self.selected_piece = None
-        self.game_objects = []
+        self.Board = None
+        self.Hands = []
         self.life = [0, 0]
         self.gen_game(window_size, num_squares, num_cards)
 
     def gen_game(self, window_size: int, num_squares: int, num_cards: int):
         """creates the board object and the two hand objects needed for a normal game"""
         X, Y = window_size
-        board_dim = (X // 2, Y // 2)
-        board_offset = (X // 3,  Y // 4)
-        self.game_objects.append(Board(board_dim, board_offset, self,  num_squares))
+        
+        #Create board
+        board_dim = (3 * X // 5, 3 * Y // 5)
+        board_offset = (X // 3,  7 * Y // 40) #Do math to put board between hands
+        self.Board = Board(board_dim, board_offset, self,  num_squares)
 
-        hand_dim = ((X*7)//10, Y // 5)
-        hand_offset = (150, 10)
-        self.game_objects.append(Hand(hand_dim, hand_offset, self, color = "White", hand_size = num_cards))
-        hand_offset = (hand_offset[0], Y - hand_offset[1] - hand_dim[1])
-        self.game_objects.append(Hand(hand_dim, hand_offset, self, color = "Black", hand_size = num_cards))
+        #Create opponents hand
+        hand_dim = ((X*7) // 15, 2 * Y // 15)
+        hand_offset = (240, 10)
+        self.Hands.append(Hand(hand_dim, hand_offset, self, color = "White", hand_size = num_cards))
+        
+        #Create your hand
+        hand_dim = (hand_dim[0] * 3 // 2, hand_dim[1] * 3 // 2)
+        hand_offset = (150, Y - hand_offset[1] - hand_dim[1])
+        self.Hands.append(Hand(hand_dim, hand_offset, self, color = "Black", hand_size = num_cards))
+        
+        
+        #Draw both players starting cards
+        for i in range(num_cards):
+            for hand in self.Hands:
+                hand.add_rand_card()
+        
+        
+        #Create CardViewer
+        hand_dim = (hand_dim[0] // 7, hand_dim[1])
+        hand_offset = (X / 10, Y / 3)
+        self.Hands.append(Hand(hand_dim, hand_offset, self, color = "Grey", hand_size = 1))
+        self.Hands[2].add_rand_card()
+        
 
     def end_turn(self):
         self.selected_piece = None
         self.turn = 'White' if self.turn == 'Black' else 'Black'
-        for Hand in self.game_objects[1:]:
-            if Hand.color == self.turn:
+        for Hand in self.Hands:
+            if Hand.color in self.turn:
                 Hand.start_turn()
 
         #time.sleep(2)
 
 
     def handle_click(self, click_pos):
-        for game in self.game_objects:
-            if self.inbound(click_pos, game.bounds):
-                game.handle_click(click_pos)
+        if self.inbound(click_pos, self.Board.bounds):
+                self.Board.handle_click(click_pos)
+                return None
+        for hand in self.Hands:
+            if self.inbound(click_pos, hand.bounds):
+                hand.handle_click(click_pos)
                 return None
         print("plz click inbound")
         return None
@@ -58,5 +82,7 @@ class game():
             for square, piece in self.selected_piece.attack_options():
                 square.set_highlight()
         
-        for game in self.game_objects:
-            game.draw(display)
+        for hand in self.Hands:
+            hand.draw(display)
+        
+        self.Board.draw(display)
