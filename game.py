@@ -1,4 +1,3 @@
-import time
 import pygame
 from chess.pyclass.Board import Board
 from magic.pyclass.Hand import Hand
@@ -33,7 +32,6 @@ class game():
         hand_offset = (150, Y - hand_offset[1] - hand_dim[1])
         self.Hands.append(Hand(hand_dim, hand_offset, self, color = "Black", hand_size = num_cards))
         
-        
         #Draw both players starting cards
         for i in range(num_cards):
             for hand in self.Hands:
@@ -45,15 +43,6 @@ class game():
         hand_offset = (X / 10, Y / 3)
         self.Hands.append(Hand(hand_dim, hand_offset, self, color = "Grey", hand_size = 1))
         self.Hands[2].add_rand_card()
-        
-
-    def end_turn(self):
-        self.selected_piece = None
-        self.turn = 'White' if self.turn == 'Black' else 'Black'
-        for Hand in self.Hands:
-            if Hand.color in self.turn:
-                Hand.start_turn()
-
         #time.sleep(2)
 
 
@@ -75,12 +64,6 @@ class game():
     def draw(self, display):
         if self.selected_piece is not None:
             self.selected_piece.set_highlight()
-
-            for square in self.selected_piece.move_options():
-                square.set_highlight()
-
-            for square, piece in self.selected_piece.attack_options():
-                square.set_highlight()
         
         for hand in self.Hands:
             hand.draw(display)

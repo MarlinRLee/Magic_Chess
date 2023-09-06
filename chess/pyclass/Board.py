@@ -3,7 +3,7 @@ import random
 
 # Game state checker
 from chess.pyclass.Square import Square
-from chess.pyclass.Basic_units import Knight, Rook, Bishop, Queen, Pawn, King
+from chess.pyclass.Piece import Piece
 from magic.pyclass.Card import Card
 
 class Board:
@@ -39,7 +39,8 @@ class Board:
 
     def setup_board(self):
         for color, row in [("White", 0), ("Black", self.size - 1)]:
-            self.squares[self.size//2][row].occupying_piece = King(self.size//2, row, color, self)
+            self.squares[self.size//2][row].occupying_piece = Piece(self.size//2, row, color, 
+                                                                    self, "K")
 
     def inbound(self,x,y):
         return 0 <= x < self.size and 0 <= y < self.size
