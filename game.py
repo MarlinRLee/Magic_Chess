@@ -60,6 +60,7 @@ class game():
         if self.inbound(click_pos, self.Stack.bounds):
             self.Stack.handle_click(click_pos)
             return None
+        game.selected_piece = None
         print("plz click inbound")
         return None
     

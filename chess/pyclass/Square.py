@@ -39,6 +39,9 @@ class Square:
             centering_rect.center = self.rect.center
             display.blit(self.occupying_piece.img, centering_rect.topleft)
         self.highlight = False
+        
+    def draw_Card(self, display):
+        self.draw(display)
 
     def set_highlight(self, default = True):
         self.highlight = default

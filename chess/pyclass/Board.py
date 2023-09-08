@@ -74,7 +74,12 @@ class Board:
             for square in square_row:
                 square.draw(display)
                 
+    def Hand_draw(self, display):
+        for square_row in self.squares:
+            for square in square_row:
+                square.draw_Card(display)
+                
     def Draw_Select(self, display):
         s_piece = self.game.selected_piece
         self.squares[0][0].occupying_piece = s_piece
-        self.squares[0][0].draw(display)
+        self.squares[0][0].draw_Card(display)

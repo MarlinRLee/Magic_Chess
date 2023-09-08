@@ -5,12 +5,15 @@ import os
 
 #creates a general Piece with no moves
 class Piece:
-    def __init__(self,x: int, y: int, color: str, Board, name: str):
+    def __init__(self,x: int, y: int, color: str, Board, name: str, MV: str = "", type: str = "", Disc: str = ""):
         self.x = x
         self.y = y
         self.color = color
         self.Board = Board
         self.name = name
+        self.MV = MV
+        self.type = type
+        self.Disc = Disc
         base_path = os.path.dirname(__file__)
         img_path = os.path.join(base_path, '..\\imgs\\' + color + '_'+ name + '.png')
         self.img = pygame.image.load(img_path)
