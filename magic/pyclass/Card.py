@@ -119,10 +119,8 @@ class Card:#.__class__.__name__
         self.hand.cards.remove(self)
 
     def draw(self, display, Card_num = None):
-        if self.team_color == self.hand.game.turn:
-            self.draw_gen(display, self.front_img, Card_num)
-        else:
-            self.draw_gen(display, self.back_img, Card_num)
+        self.draw_gen(display, self.front_img, Card_num)
+        #self.draw_gen(display, self.back_img, Card_num)
 
     def draw_gen(self, display, schemea, Card_num = None):
         draw_obj, bliz_obj = schemea

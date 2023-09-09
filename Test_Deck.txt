@@ -1,0 +1,6 @@
+B 3 "" Bishop
+K 4 "" King
+N 3 "" Knight
+P 1 "" Pawn
+Q 7 "" Queen
+R 5 "" Rook

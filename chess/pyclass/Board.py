@@ -1,12 +1,9 @@
-import pygame
-import random
-
 # Game state checker
 from chess.pyclass.Square import Square
 from chess.pyclass.Piece import Piece
 
 class Board:
-    def __init__(self, board_size, off_Set, game, size_x = 8, size_y = 8):
+    def __init__(self, board_size, off_Set, game, size_x = 8, size_y = 8, colors = None):
 
         self.game = game
 
@@ -22,15 +19,15 @@ class Board:
         self.tile_width = width // size_x
         self.tile_height = height // size_y
 
-        self.squares = self.generate_squares()
+        self.squares = self.generate_squares(colors)
 
-    def generate_squares(self):
+    def generate_squares(self, colors):
         output = []
         for x in range(self.size_x):
             output.append([])
             for y in range(self.size_y):
                 output[x].append(
-                    Square(x, y, self.tile_width, self.tile_height, self.offset, self)
+                    Square(x, y, self.tile_width, self.tile_height, self.offset, self, colors)
                 )
         return output
 
@@ -51,22 +48,16 @@ class Board:
     def handle_click(self, click_pos):
         x, y = self.pix_to_cord(click_pos)
         if not self.inbound(x, y): return None
-        square_bound = self.squares[x][y]
-        self.act(square_bound)
-
-    def act(self, clicked_square):
+        clicked_square = self.squares[x][y]
         #may be None
         clicked_piece = clicked_square.occupying_piece
         if (clicked_piece is not None and 
             self.game.selected_piece is None):
             self.game.selected_piece = clicked_piece
             return None
-
         if self.game.selected_piece is None:
             return None
-
         self.game.selected_piece.move_piece(clicked_square)
-
         return None
 
     def draw(self, display):
@@ -83,3 +74,13 @@ class Board:
         s_piece = self.game.selected_piece
         self.squares[0][0].occupying_piece = s_piece
         self.squares[0][0].draw_Card(display)
+        
+    def add(self, Piece):
+        for x in range(self.size_x):
+            for y in range(self.size_y):
+                if(self.squares[x][y].occupying_piece == None):
+                    self.squares[x][y].occupying_piece = Piece
+                    Piece.x = x
+                    Piece.y = y
+                    return
+        raise Exception("Board is full")
