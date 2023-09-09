@@ -22,26 +22,26 @@ class game():
         self.Board = Board(Board_dim, Board_offset, self,  num_squares)
         self.Board.setup_board()
         
-
-        #Create opponents hand
-        Player_dim = ((X*7) // 15, 2 * Y // 15)
-        Player_offset = (240, 10)
-        self.Players.append(Player("White", Player_dim, Player_offset, self, Hand_size = 7, LibraryName = "Test_Deck.txt"))
-        
+        Card_dim = (X // 10, Y // 5)
         #Create your hand
-        Player_dim = (Player_dim[0] * 3 // 2, Player_dim[1] * 3 // 2)
-        Player_offset = (150, Y - Player_offset[1] - Player_dim[1])#better calcs
-        self.Players.append(Player("Black", Player_dim, Player_offset, self, Hand_size = 7, LibraryName = "Test_Deck.txt"))
+        Player_offset = (X / 8, Y - Card_dim[1] - .01 * Y)#better calcs
+        self.Players.append(Player("Black", Card_dim, Player_offset, self, Hand_size = num_cards, 
+                                   LibraryName = "Test_Deck.txt"))
         
+        #Create opponents hand
+        Small_Card_dim = (Card_dim[0] * 3 / 4, Card_dim[1] * 3 / 4)
+        Player_offset = (1 * X / 3, .01 * Y)
+        self.Players.append(Player("White",  Small_Card_dim, Player_offset, self, Hand_size = num_cards, 
+                                   LibraryName = "Test_Deck.txt"))
+        
+     
         #Create CardViewer
-        Player_dim = (Player_dim[0] // num_cards, Player_dim[1])
-        Viewer_offset = (X / 10, 3 * Y / 5)
-        self.Viewer = Board(Player_dim, Viewer_offset, self, size_x = 1, size_y = 1)
+        Viewer_dim = (Card_dim[0], Card_dim[1])
+        Viewer_offset = (X / 10, 2.9 * Y / 5)
+        self.Viewer = Board(Viewer_dim, Viewer_offset, self, size_x = 1, size_y = 1)
         
         stack_offset = (X / 10, 1 / 5 * Y)
-        self.Stack = Board(Player_dim, stack_offset, self, size_x = 1, size_y = 1)
-        #self.Hands[2].add_rand_card()
-        #time.sleep(2)
+        self.Stack = Board(Viewer_dim, stack_offset, self, size_x = 1, size_y = 1)
 
 
     def handle_click(self, click_pos):
@@ -52,10 +52,6 @@ class game():
             if self.inbound(click_pos, player.bounds):
                 player.handle_click(click_pos)
                 return None
-        #for Library in self.Librarys:
-        #    if self.inbound(click_pos, Library.bounds):
-        #        Library.handle_click(click_pos)
-        #        return None
         if self.inbound(click_pos, self.Stack.bounds):
             self.Stack.handle_click(click_pos)
             return None
@@ -72,7 +68,7 @@ class game():
             self.selected_piece.set_highlight()
         
         for player in self.Players:
-            player.Hand.draw(display)
+            player.draw(display)
         
         self.Stack.draw(display)
         
