@@ -58,7 +58,7 @@ class Player:
             self.Hand.add(self.Library.pop())
         
     def draw(self, display):
-        self.Hand.draw(display)
+        self.Hand.draw(display, detailed = True)
         
         #draw library
         pygame.draw.rect(display, (128, 64, 0), self.LibRect)

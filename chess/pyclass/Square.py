@@ -31,30 +31,17 @@ class Square:
         columns = 'abcdefghijklmnopqrstuvwxyz'
         return columns[self.x] + str(self.y + 1)
 
-    def draw(self, display):
-        # configures if tile should be light or dark or highlighted tile
-        if self.highlight:
-            pygame.draw.rect(display, self.highlight_color, self.rect)
-        else:
-            pygame.draw.rect(display, self.draw_color, self.rect)
+    def draw(self, display, detailed = False):
+        color = self.highlight_color if self.highlight else self.draw_color
+        pygame.draw.rect(display, color, self.rect)
             
         # adds the chess piece icons
         if self.occupying_piece != None:
-            self.occupying_piece.draw(display, self.rect.center)
+            if detailed:
+                self.occupying_piece.detailed_draw(display, self.rect.center)
+            else:
+                self.occupying_piece.draw(display, self.rect.center)
         self.highlight = False
         
-    def draw_Card(self, display):
-        # configures if tile should be light or dark or highlighted tile
-        if self.highlight:
-            pygame.draw.rect(display, self.highlight_color, self.rect)
-        else:
-            pygame.draw.rect(display, self.draw_color, self.rect)
-            
-        # adds the chess piece icons
-        # adds the chess piece icons
-        if self.occupying_piece != None:
-            self.occupying_piece.draw(display, self.rect.center)
-        self.highlight = False
-
     def set_highlight(self, default = True):
         self.highlight = default

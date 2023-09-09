@@ -60,20 +60,22 @@ class Board:
         self.game.selected_piece.move_piece(clicked_square)
         return None
 
-    def draw(self, display):
+    def draw(self, display, detailed = False):
         for square_row in self.squares:
             for square in square_row:
-                square.draw(display)
+                square.draw(display, detailed = detailed)
                 
-    def Hand_draw(self, display):
-        for square_row in self.squares:
-            for square in square_row:
-                square.draw_Card(display)
                 
     def Draw_Select(self, display):
         s_piece = self.game.selected_piece
-        self.squares[0][0].occupying_piece = s_piece
-        self.squares[0][0].draw_Card(display)
+        if s_piece is not None:
+            real_loc = s_piece.board
+            s_piece.board = self
+            self.squares[0][0].occupying_piece = s_piece
+        self.squares[0][0].draw(display, detailed = True)
+        if s_piece is not None:
+            s_piece.board = real_loc
+            self.squares[0][0].occupying_piece = None
         
     def add(self, Piece):
         for x in range(self.size_x):

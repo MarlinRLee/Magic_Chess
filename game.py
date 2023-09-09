@@ -70,7 +70,7 @@ class game():
         for player in self.Players:
             player.draw(display)
         
-        self.Stack.draw(display)
+        self.Stack.draw(display, detailed = True)
         
         self.Viewer.Draw_Select(display)
         
