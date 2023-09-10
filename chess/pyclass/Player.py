@@ -21,6 +21,7 @@ class Player:
         self.color = color
         self.game = game
         self.Library = self.init_Lib(LibraryName, self.Hand)
+        self.suffle()
         self.LibRect = pygame.Rect(
             self.Library_bounds[0][0],
             self.Library_bounds[1][0],
@@ -45,9 +46,19 @@ class Player:
         deck = []
         with open(LibraryName) as file:
             for line in file:
-                lineArray = line.split()
-                Name, MV, Type, Text_Box = lineArray
-                deck.append(Piece(0, 0, self.color, board, Name, MV, Type, Text_Box))
+                lineArray = line.split()                   
+                Name, imgName, isLand, mv, Type, Text_Box = lineArray
+                if mv == "None":
+                    mv = ""
+                deck.append(Piece(0, 0, 
+                                  self.color, 
+                                  board, 
+                                  Name, 
+                                  mv, 
+                                  Type, 
+                                  Text_Box,
+                                  isLand  == "True",
+                                  imgName))
         return deck
         
     def suffle(self):

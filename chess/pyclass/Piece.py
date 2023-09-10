@@ -5,27 +5,36 @@ import os
 
 #creates a general Piece with no moves
 class Piece:
-    def __init__(self, x: int, y: int, color: str, board, name: str, MV: str = "temo", type: str = "", Text_Box: str = ""):
+    def __init__(self, x: int, y: int, color: str, board, name: str, MV: str = "0", 
+                 type: str = "", Text_Box: str = "Default", isLand: bool = False,
+                 imgName: str = ""):
         self.x = x
         self.y = y
         self.color = color
         self.board = board
+        self.isLand = isLand
         self.name = name
         self.MV = MV
         self.type = type
         self.Text_Box = Text_Box
         base_path = os.path.dirname(__file__)
-        img_path = os.path.join(base_path, '..\\imgs\\' + color + '_'+ name + '.png')
+        img_path = os.path.join(base_path, '..\\imgs\\' + imgName)
         self.img = pygame.image.load(img_path)
 
     #change the location of the Piece on the Board
     def move(self, board, x: int, y: int) -> None:
-        self.board.squares[self.x][self.y].occupying_piece = None
+        if self.isLand:
+            self.board.squares[self.x][self.y].occupying_Land = None
+        else:
+            self.board.squares[self.x][self.y].occupying_piece = None
         self.x = x
         self.y = y
         self.board = board
-        self.board.squares[x][y].occupying_piece = self
-        self.board.game.selected_piece = None
+        if self.isLand:
+            self.board.squares[x][y].occupying_Land = self
+        else:
+            self.board.squares[x][y].occupying_piece = self
+
 
     #flag the square the piece is on for highlighting
     def set_highlight(self, default: bool = True) -> None:

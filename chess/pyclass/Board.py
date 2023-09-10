@@ -34,7 +34,7 @@ class Board:
     def setup_board(self):
         for color, row in [("White", 0), ("Black", self.size_y - 1)]:
             self.squares[self.size_y//2][row].occupying_piece = Piece(self.size_x//2, row, color, 
-                                                                    self, "K")
+                                                                    self,"K", imgName = color + "_K.png")
 
     def inbound(self,x,y):
         return 0 <= x < self.size_x and 0 <= y < self.size_y
@@ -51,6 +51,8 @@ class Board:
         clicked_square = self.squares[x][y]
         #may be None
         clicked_piece = clicked_square.occupying_piece
+        if clicked_piece is None:
+            clicked_piece = clicked_square.occupying_Land
         if (clicked_piece is not None and 
             self.game.selected_piece is None):
             self.game.selected_piece = clicked_piece
@@ -58,6 +60,7 @@ class Board:
         if self.game.selected_piece is None:
             return None
         self.game.selected_piece.move_piece(clicked_square)
+        self.game.selected_piece = None
         return None
 
     def draw(self, display, detailed = False):
@@ -80,9 +83,13 @@ class Board:
     def add(self, Piece):
         for x in range(self.size_x):
             for y in range(self.size_y):
-                if(self.squares[x][y].occupying_piece == None):
-                    self.squares[x][y].occupying_piece = Piece
+                cur_square = self.squares[x][y]
+                if(cur_square.occupying_piece == None and cur_square.occupying_Land == None):
+                    if Piece.isLand:
+                        self.squares[x][y].occupying_Land = Piece
+                    else:
+                        self.squares[x][y].occupying_piece = Piece
                     Piece.x = x
                     Piece.y = y
                     return
-        raise Exception("Board is full")
+        return

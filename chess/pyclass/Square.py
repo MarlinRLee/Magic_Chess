@@ -10,6 +10,8 @@ class Square:
         self.height = height
         self.board  = board
         self.color = 'White' if (x + y) % 2 == 0 else 'Black'
+        self.occupying_piece = None
+        self.occupying_Land = None
         
         if colors is None:
             colors = [(220, 208, 194), (53, 53, 53), (100, 249, 83), (0, 228, 10)]
@@ -17,7 +19,6 @@ class Square:
         white_color, black_color, high_white, high_black = colors
         self.draw_color = white_color if self.color == 'White' else black_color
         self.highlight_color = high_white if self.color == 'White' else high_black
-        self.occupying_piece = None
         self.coord = self.get_coord()
         self.highlight = False
         self.rect = pygame.Rect(
@@ -34,7 +35,11 @@ class Square:
     def draw(self, display, detailed = False):
         color = self.highlight_color if self.highlight else self.draw_color
         pygame.draw.rect(display, color, self.rect)
-            
+        if self.occupying_Land != None:
+            if detailed:
+                self.occupying_Land.detailed_draw(display, self.rect.center)
+            else:
+                self.occupying_Land.draw(display, self.rect.center)
         # adds the chess piece icons
         if self.occupying_piece != None:
             if detailed:

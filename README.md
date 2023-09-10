@@ -8,8 +8,8 @@ TODO:
   - [x] Add the ability to move pieces wherever
   - [x] Add library to draw from
   - [x] Add viwer area to look at card text in board.
-  - [ ] Add text to view on cards.
-  - [ ] Add the ability to stack cards on one square
+  - [X] Add text to view on cards.
   - [X] Add stack for comunication
-  - [ ] Add remote play
+  - [X] Add the ability to have lands
   - [ ] Add the cards to play
+  - [ ] Add remote play

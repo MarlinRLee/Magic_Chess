@@ -1,6 +1,8 @@
+import tkinter
+import tkinter.filedialog
 import pygame
 from chess.pyclass.Board import Board
-from magic.pyclass.Player import Player
+from chess.pyclass.Player import Player
 
 class game():
     def __init__(self, window_size: int, num_squares: int = 8, num_cards: int = 7):
@@ -25,14 +27,16 @@ class game():
         Card_dim = (X // 10, Y // 5)
         #Create your hand
         Player_offset = (X / 8, Y - Card_dim[1] - .01 * Y)#better calcs
+        deckFile = self.prompt_file()
         self.Players.append(Player("Black", Card_dim, Player_offset, self, Hand_size = num_cards, 
-                                   LibraryName = "Test_Deck.txt"))
+                                   LibraryName = deckFile))
         
         #Create opponents hand
         Small_Card_dim = (Card_dim[0] * 3 / 4, Card_dim[1] * 3 / 4)
         Player_offset = (1 * X / 3, .01 * Y)
+        deckFile = self.prompt_file()
         self.Players.append(Player("White",  Small_Card_dim, Player_offset, self, Hand_size = num_cards, 
-                                   LibraryName = "Test_Deck.txt"))
+                                   LibraryName = deckFile))
         
      
         #Create CardViewer
@@ -75,3 +79,11 @@ class game():
         self.Viewer.Draw_Select(display)
         
         self.Board.draw(display)
+        
+    def prompt_file(self):
+        """Create a Tk file dialog and cleanup when finished"""
+        top = tkinter.Tk()
+        top.withdraw()  # hide window
+        file_name = tkinter.filedialog.askopenfilename(parent=top)
+        top.destroy()
+        return file_name
