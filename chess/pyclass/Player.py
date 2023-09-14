@@ -52,6 +52,7 @@ class Player:
                 for i in range(int(num)):
                     newPiece = Piece.copy(self.game.db[Name.strip()])
                     newPiece.board = self.Hand
+                    newPiece.color = self.color
                     deck.append(newPiece)
         return deck
         

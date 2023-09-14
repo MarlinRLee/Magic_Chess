@@ -4,7 +4,7 @@ from game import game
 
 pygame.init()
 
-WINDOW_DIM = (600, 600)
+WINDOW_DIM = (900, 600)
 SQUARE_NUMBER = 8
 HAND_SIZE = 7
 screen = pygame.display.set_mode(WINDOW_DIM)

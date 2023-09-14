@@ -52,6 +52,8 @@ class Piece:
 
     def draw(self, display, center):
         Drawimg = pygame.transform.scale(self.img, (3 * self.board.tile_width // 4, 3 * self.board.tile_height // 4))
+        if(self.color == "White"):
+            Drawimg = pygame.transform.flip(Drawimg, True, True)
         centering_rect = Drawimg.get_rect()
         centering_rect.center = center
         display.blit(Drawimg, centering_rect.topleft)
@@ -61,6 +63,8 @@ class Piece:
         Top_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 10)
         Bot_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 10)
         Drawimg = pygame.transform.scale(self.img, (2 * self.board.tile_width // 4, 1 * self.board.tile_height // 4))
+        if(self.color == "White"):
+            Drawimg = pygame.transform.flip(Drawimg, True, True)
         centering_rect = Drawimg.get_rect()
         centering_rect.center = (center[0], center[1] - self.board.tile_height / 5)
         Top_Rect.center = (center[0], center[1] - self.board.tile_height / 2.5)
