@@ -34,7 +34,7 @@ class Board:
     def setup_board(self):
         for color, row in [("White", 0), ("Black", self.size_y - 1)]:
             self.squares[self.size_y//2][row].occupying_piece = Piece(self.size_x//2, row, color, 
-                                                                    self,"K", imgName = color + "_K.png")
+                                                                    self,"K", imgName = "King.png")
 
     def inbound(self,x,y):
         return 0 <= x < self.size_x and 0 <= y < self.size_y
