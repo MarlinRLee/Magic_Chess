@@ -6,13 +6,13 @@ import os
 #creates a general Piece with no moves
 class Piece:
     def __init__(self, x: int, y: int, color: str, board, name: str, MV: str = "0", 
-                 type: str = "", Text_Box: str = "Default", isLand: bool = False,
+                 type: str = "", Text_Box: str = "Default",
                  imgName: str = ""):
         self.x = x
         self.y = y
         self.color = color
         self.board = board
-        self.isLand = isLand
+        self.isLand = type == "Land"
         self.name = name
         self.MV = MV
         self.type = type
@@ -20,6 +20,12 @@ class Piece:
         base_path = os.path.dirname(__file__)
         img_path = os.path.join(base_path, '..\\imgs\\' + imgName)
         self.img = pygame.image.load(img_path)
+    
+    def copy(toCopyPiece):
+        newPiece = Piece(toCopyPiece.x,toCopyPiece.y,toCopyPiece.color,toCopyPiece.board,
+                         toCopyPiece.name, toCopyPiece.MV, toCopyPiece.type, toCopyPiece.Text_Box,
+                         "../MTG_Art/doom_blade.jpg")
+        return newPiece
 
     #change the location of the Piece on the Board
     def move(self, board, x: int, y: int) -> None:

@@ -15,6 +15,8 @@ def draw(display):
 	display.fill((100, 100, 100))
 	game.draw(display)
 	pygame.display.update()
+         
+    
 
 
 if __name__ == '__main__':

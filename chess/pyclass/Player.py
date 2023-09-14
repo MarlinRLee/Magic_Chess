@@ -1,4 +1,5 @@
 # /* Player.py
+import xml.etree.ElementTree as ET
 import random
 import pygame
 
@@ -20,7 +21,7 @@ class Player:
                             colors = [(220, 208, 194), (220, 208, 194), (100, 249, 83), (100, 249, 83)])
         self.color = color
         self.game = game
-        self.Library = self.init_Lib(LibraryName, self.Hand)
+        self.Library = self.init_Lib(LibraryName)
         self.suffle()
         self.LibRect = pygame.Rect(
             self.Library_bounds[0][0],
@@ -41,24 +42,17 @@ class Player:
             return None
         self.game.selected_piece = None
         return None
-        
-    def init_Lib(self, LibraryName, board):
+    
+    def init_Lib(self, LibraryName):
         deck = []
+                
         with open(LibraryName) as file:
             for line in file:
-                lineArray = line.split()                   
-                Name, imgName, isLand, mv, Type, Text_Box = lineArray
-                if mv == "None":
-                    mv = ""
-                deck.append(Piece(0, 0, 
-                                  self.color, 
-                                  board, 
-                                  Name, 
-                                  mv, 
-                                  Type, 
-                                  Text_Box,
-                                  isLand  == "True",
-                                  imgName))
+                num, Name = line.strip().split(",")                   
+                for i in range(int(num)):
+                    newPiece = Piece.copy(self.game.db[Name.strip()])
+                    newPiece.board = self.Hand
+                    deck.append(newPiece)
         return deck
         
     def suffle(self):

@@ -1,10 +1,3 @@
-B White_B.png False 3GG Bishop Bishop
-K White_K.png False  4RR King King
-N White_N.png False 3WW Knight Knight
-P White_P.png False 1UU Pawn Pawn
-Q White_Q.png False 7CC Queen Queen
-Red_Land Red.png True None Land Land
-Green_Land Green.png True None Land Land
-White_Land White.png True None Land Land
-Blue_Land Blue.png True None Land Land
-Black_Land Black.png True None Land Land
+4, beast of protection
+4, Courageous Pawn
+4, Balance

@@ -2,7 +2,9 @@ import tkinter
 import tkinter.filedialog
 import pygame
 from chess.pyclass.Board import Board
+from chess.pyclass.Piece import Piece
 from chess.pyclass.Player import Player
+import xml.etree.ElementTree as ET
 
 class game():
     def __init__(self, window_size: int, num_squares: int = 8, num_cards: int = 7):
@@ -12,6 +14,7 @@ class game():
         self.Board = None
         self.Players = []
         self.life = [0, 0]
+        self.db = self.get_card_db("../text_magic_set.xml")
         self.gen_game(window_size, num_squares, num_cards)
 
     def gen_game(self, window_size: int, num_squares: int, num_cards: int):
@@ -34,7 +37,7 @@ class game():
         #Create opponents hand
         Small_Card_dim = (Card_dim[0] * 3 / 4, Card_dim[1] * 3 / 4)
         Player_offset = (1 * X / 3, .01 * Y)
-        deckFile = self.prompt_file()
+        #deckFile = self.prompt_file()
         self.Players.append(Player("White",  Small_Card_dim, Player_offset, self, Hand_size = num_cards, 
                                    LibraryName = deckFile))
         
@@ -87,3 +90,25 @@ class game():
         file_name = tkinter.filedialog.askopenfilename(parent=top)
         top.destroy()
         return file_name
+    
+    def get_card_db(self, fileXML):
+        save_map = {}
+        tree = ET.parse(fileXML)
+        root = tree.getroot()
+        for magCard in root:
+            Name, Cost, Type, Text_Box, imgName = ("None", "None", "None", "None", "None")
+            if(magCard.tag != "card"):
+                continue
+            for cardAttr in magCard:
+                match cardAttr.tag:
+                    case "name":
+                        Name = cardAttr.text
+                    case "cost":
+                        Cost = cardAttr.text
+                    case "type":
+                        Type = cardAttr.text
+                    case "rules":
+                        Text_Box = cardAttr.text
+            imgName = "../MTG_Art/doom_blade.jpg"
+            save_map[Name] = Piece(0, 0, None, None, Name, Cost, Type, Text_Box, imgName)
+        return save_map

@@ -11,5 +11,6 @@ TODO:
   - [X] Add text to view on cards.
   - [X] Add stack for comunication
   - [X] Add the ability to have lands
-  - [ ] Add the cards to play
+  - [x] Add the cards to game from xml file
+  - [ ] Do a ton of work to make it not look bad and make it rescalable 
   - [ ] Add remote play
