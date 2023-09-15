@@ -30,7 +30,8 @@ class game():
         Card_dim = (X // 10, Y // 5)
         #Create your hand
         Player_offset = (X / 8, Y - Card_dim[1] - .01 * Y)#better calcs
-        deckFile = self.prompt_file()
+        #deckFile = self.prompt_file()
+        deckFile = "Test_Deck.txt"
         self.Players.append(Player("Black", Card_dim, Player_offset, self, Hand_size = num_cards, 
                                    LibraryName = deckFile))
         

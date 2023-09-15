@@ -6,7 +6,7 @@ import pygame
 # returns any text that didn't get blitted
 #From / Based on https://www.pygame.org/wiki/TextWrap
 def drawTextAdjust(surface, text, color, rect, aa=False, bkg=None,
-             minFont = 6, startingFont = 18):
+             minFont = 10, startingFont = 18):
     rect = Rect(rect)
     
     curFontsize = startingFont
@@ -19,10 +19,9 @@ def drawTextAdjust(surface, text, color, rect, aa=False, bkg=None,
         blitzText = loop_text(surface, text, color, rect, font, aa=aa, bkg=bkg, blitz=False)
 
         if blitzText == "":
-            loop_text(surface, text, color, rect, font, aa=aa, bkg=bkg, blitz=True)
-            return ""
-        curFontsize -= 2
-
+            break
+        curFontsize -= 1
+    blitzText = loop_text(surface, text, color, rect, font, aa=aa, bkg=bkg, blitz=True)
     return blitzText
 
 
@@ -31,6 +30,8 @@ def loop_text(surface, text, color, rect, font, aa=False, bkg=None, blitz = Fals
     fontHeight = font.size("Tg")[1]
     lineSpacing = -2
     y = rect.top
+    #if text.rfind("\n"):
+    #    print(text.rfind("\n"))
     while text:
         i = 1
 
@@ -40,10 +41,14 @@ def loop_text(surface, text, color, rect, font, aa=False, bkg=None, blitz = Fals
 
         # determine maximum width of line
         while font.size(text[:i])[0] < rect.width and i < len(text):
+            if text[i] == "\n":
+                text = text[:i] + " " + text[i+1:]
+                i += 1
+                break
             i += 1
 
         # if we've wrapped the text, then adjust the wrap to the last word      
-        if i < len(text): 
+        if i < len(text):
             i = text.rfind(" ", 0, i) + 1
         
         # render the line and blit it to the surface
