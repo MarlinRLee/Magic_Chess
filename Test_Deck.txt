@@ -1,2 +1,3 @@
 4, Knight of the End
 4, Channeling Bishop
+4, Thopter Assembly

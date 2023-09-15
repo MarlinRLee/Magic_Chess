@@ -1,4 +1,5 @@
 import pygame
+from TEXTWRAP import drawTextAdjust
 #from chess.pyclass.Board import Board
 from chess.pyclass.Square import Square
 import os
@@ -58,21 +59,22 @@ class Piece:
         centering_rect.center = center
         display.blit(Drawimg, centering_rect.topleft)
         
-    def detailed_draw(self, display, center):
-        
-        Top_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 10)
-        Bot_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 10)
+    def detailed_draw(self, display, center):        
+        #Bliz img
         Drawimg = pygame.transform.scale(self.img, (2 * self.board.tile_width // 4, 1 * self.board.tile_height // 4))
         if(self.color == "White"):
             Drawimg = pygame.transform.flip(Drawimg, True, True)
         centering_rect = Drawimg.get_rect()
         centering_rect.center = (center[0], center[1] - self.board.tile_height / 5)
-        Top_Rect.center = (center[0], center[1] - self.board.tile_height / 2.5)
-        Bot_Rect.center = (center[0], center[1])
         display.blit(Drawimg, centering_rect.topleft)
-        Name = self.board.game.font.render(self.name, True, (0,0,0), None)
-        mv = self.board.game.font.render(self.MV, True, (0,0,0), None)
-        textBox = self.board.game.font.render(self.Text_Box, True, (0,0,0), None)
-        display.blit(Name, Top_Rect.topleft)
-        display.blit(mv, (Top_Rect.topright[0] - self.board.tile_width / 3, Top_Rect.topright[1]))
-        display.blit(textBox, Bot_Rect.topleft)
+
+        #blitz topbar
+        Top_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 10)
+        Top_Rect.center = (center[0], center[1] - self.board.tile_height / 2.5)
+        top_bar = self.name + " " + self.MV
+        drawTextAdjust(display, top_bar, (0,0,0), Top_Rect)
+        
+        #blitz textbox
+        Bot_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 2)
+        Bot_Rect.center = (center[0], center[1] + 30)
+        drawTextAdjust(display, self.Text_Box, (0,0,0), Bot_Rect)

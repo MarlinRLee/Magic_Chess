@@ -43,12 +43,12 @@ class game():
         
      
         #Create CardViewer
-        Viewer_dim = (Card_dim[0], Card_dim[1])
-        Viewer_offset = (X / 10, 2.9 * Y / 5)
+        Viewer_dim = (Card_dim[0] * 1.5, Card_dim[1] * 1.5)
+        Viewer_offset = (X / 10, 2.3 * Y / 5)
         self.Viewer = Board(Viewer_dim, Viewer_offset, self, size_x = 1, size_y = 1)
         
         stack_offset = (X / 10, 1 / 5 * Y)
-        self.Stack = Board(Viewer_dim, stack_offset, self, size_x = 1, size_y = 1)
+        self.Stack = Board(Card_dim, stack_offset, self, size_x = 1, size_y = 1)
 
 
     def handle_click(self, click_pos):
