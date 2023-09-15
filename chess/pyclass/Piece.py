@@ -51,30 +51,43 @@ class Piece:
     def move_piece(self, square: Square):
         self.move(square.board, square.x, square.y)
 
-    def draw(self, display, center):
-        Drawimg = pygame.transform.scale(self.img, (3 * self.board.tile_width // 4, 3 * self.board.tile_height // 4))
+    def draw(self, display, rect, width = None, height = None):
+        if width is None:
+            width = 3 * self.board.tile_width // 4
+        if height is None:
+            height = 3 * self.board.tile_height // 4
+        Drawimg = pygame.transform.scale(self.img, (width, height))
         if(self.color == "White"):
             Drawimg = pygame.transform.flip(Drawimg, True, True)
         centering_rect = Drawimg.get_rect()
-        centering_rect.center = center
+        centering_rect.center = rect.center
         display.blit(Drawimg, centering_rect.topleft)
         
-    def detailed_draw(self, display, center):        
+    def simi_detailed_draw(self, display, rect):
+        #blitz topbar
+        Top_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 5)
+        Top_Rect.topleft = rect.topleft
+        top_bar = self.name + " " + self.MV
+        drawTextAdjust(display, top_bar, (0,0,0), Top_Rect)
+        img_rect = pygame.Rect(rect)
+        img_rect.center = (rect.center[0], rect.center[1] + self.board.tile_height / 4)
+        self.draw(display, img_rect,
+                  self.board.tile_width // 2, self.board.tile_height // 4)
+        
+    def detailed_draw(self, display, rect):        
         #Bliz img
-        Drawimg = pygame.transform.scale(self.img, (2 * self.board.tile_width // 4, 1 * self.board.tile_height // 4))
-        if(self.color == "White"):
-            Drawimg = pygame.transform.flip(Drawimg, True, True)
-        centering_rect = Drawimg.get_rect()
-        centering_rect.center = (center[0], center[1] - self.board.tile_height / 5)
-        display.blit(Drawimg, centering_rect.topleft)
-
+        img_rect = pygame.Rect(rect)
+        img_rect.center = (rect.center[0], rect.center[1] - self.board.tile_height / 5)
+        self.draw(display, img_rect,
+                  self.board.tile_width // 2, self.board.tile_height // 4)
+    
         #blitz topbar
         Top_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 10)
-        Top_Rect.center = (center[0], center[1] - self.board.tile_height / 2.5)
+        Top_Rect.topleft = (rect.topleft[0], rect.topleft[1])
         top_bar = self.name + " " + self.MV
         drawTextAdjust(display, top_bar, (0,0,0), Top_Rect)
         
         #blitz textbox
         Bot_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 2)
-        Bot_Rect.center = (center[0], center[1] + 30)
+        Bot_Rect.center = (rect.center[0], rect.center[1] + 30)
         drawTextAdjust(display, self.Text_Box, (0,0,0), Bot_Rect)

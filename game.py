@@ -78,7 +78,7 @@ class game():
         for player in self.Players:
             player.draw(display)
         
-        self.Stack.draw(display, detailed = True)
+        self.Stack.draw(display, detailed = "Min")
         
         self.Viewer.Draw_Select(display)
         

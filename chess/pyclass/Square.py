@@ -32,20 +32,17 @@ class Square:
         columns = 'abcdefghijklmnopqrstuvwxyz'
         return columns[self.x] + str(self.y + 1)
 
-    def draw(self, display, detailed = False):
+    def draw(self, display, detailed = "Min"):
         color = self.highlight_color if self.highlight else self.draw_color
         pygame.draw.rect(display, color, self.rect)
-        if self.occupying_Land != None:
-            if detailed:
-                self.occupying_Land.detailed_draw(display, self.rect.center)
-            else:
-                self.occupying_Land.draw(display, self.rect.center)
-        # adds the chess piece icons
-        if self.occupying_piece != None:
-            if detailed:
-                self.occupying_piece.detailed_draw(display, self.rect.center)
-            else:
-                self.occupying_piece.draw(display, self.rect.center)
+        for toDraw in [self.occupying_Land, self.occupying_piece]:
+            if toDraw != None:
+                if detailed == "Full":
+                    toDraw.detailed_draw(display, self.rect)
+                elif detailed == "Simi":
+                    toDraw.simi_detailed_draw(display, self.rect)
+                else:
+                    toDraw.draw(display, self.rect)
         self.highlight = False
         
     def set_highlight(self, default = True):

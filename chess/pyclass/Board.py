@@ -63,7 +63,7 @@ class Board:
         self.game.selected_piece = None
         return None
 
-    def draw(self, display, detailed = False):
+    def draw(self, display, detailed = "Min"):
         for square_row in self.squares:
             for square in square_row:
                 square.draw(display, detailed = detailed)
@@ -75,7 +75,7 @@ class Board:
             real_loc = s_piece.board
             s_piece.board = self
             self.squares[0][0].occupying_piece = s_piece
-        self.squares[0][0].draw(display, detailed = True)
+        self.squares[0][0].draw(display, detailed = "Full")
         if s_piece is not None:
             s_piece.board = real_loc
             self.squares[0][0].occupying_piece = None

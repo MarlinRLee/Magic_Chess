@@ -64,7 +64,7 @@ class Player:
             self.Hand.add(self.Library.pop())
         
     def draw(self, display):
-        self.Hand.draw(display, detailed = True)
+        self.Hand.draw(display, detailed = "Simi")
         
         #draw library
         pygame.draw.rect(display, (128, 64, 0), self.LibRect)
