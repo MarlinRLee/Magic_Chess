@@ -44,12 +44,14 @@ class game():
         
      
         #Create CardViewer
-        Viewer_dim = (Card_dim[0] * 1.5, Card_dim[1] * 1.5)
-        Viewer_offset = (X / 10, 2.3 * Y / 5)
+        Viewer_dim = (Card_dim[0] * 1.75, Card_dim[1] * 2.5)
+        Viewer_offset = (X / 50, Y / 5)
         self.Viewer = Board(Viewer_dim, Viewer_offset, self, size_x = 1, size_y = 1)
         
-        stack_offset = (X / 10, 1 / 5 * Y)
-        self.Stack = Board(Card_dim, stack_offset, self, size_x = 1, size_y = 1)
+        #Create stack
+        stack_offset = (X / 4.5, Y / 5)
+        Stack_dim = (Card_dim[0] *  .75, Card_dim[1] * 2)
+        self.Stack = Board(Stack_dim, stack_offset, self, size_x = 1, size_y = 5)
 
 
     def handle_click(self, click_pos):
@@ -107,7 +109,15 @@ class game():
                     case "cost":
                         Cost = cardAttr.text
                     case "type":
-                        Type = cardAttr.text
+                        Type = ""
+                        Stype = cardAttr.find("supertype")
+                        if Stype != None:
+                            Type = Stype.text + " - "
+                            
+                        Ntype = cardAttr.find("subtype")
+                        if Ntype != None and Ntype.text != None:
+                            Type += Ntype.text
+                            
                     case "rules":
                         Text_Box = cardAttr.text
             imgName = "../MTG_Art/doom_blade.jpg"

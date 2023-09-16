@@ -64,30 +64,54 @@ class Piece:
         display.blit(Drawimg, centering_rect.topleft)
         
     def simi_detailed_draw(self, display, rect):
+        #draw inner shape
+        Small_rect = rect.scale_by(.9)
+        Small_rect.center = rect.center
+        pygame.draw.rect(display, (200, 200, 200), 
+                         Small_rect) 
+        
+        
         #blitz topbar
         Top_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 5)
-        Top_Rect.topleft = rect.topleft
+        Top_Rect.topleft = Small_rect.topleft
         top_bar = self.name + " " + self.MV
         drawTextAdjust(display, top_bar, (0,0,0), Top_Rect)
-        img_rect = pygame.Rect(rect)
-        img_rect.center = (rect.center[0], rect.center[1] + self.board.tile_height / 4)
+        img_rect = pygame.Rect(Small_rect)
+        img_rect.center = (Small_rect.center[0], Small_rect.center[1] + self.board.tile_height / 8)
         self.draw(display, img_rect,
-                  self.board.tile_width // 2, self.board.tile_height // 4)
+                  self.board.tile_width // 1.5, self.board.tile_height // 2)
         
-    def detailed_draw(self, display, rect):        
+    def detailed_draw(self, display, rect):
+        #draw inner shape
+        Small_rect = rect.scale_by(.9)
+        Small_rect.center = rect.center
+        pygame.draw.rect(display, (200, 200, 200), 
+                         Small_rect) 
+               
         #Bliz img
-        img_rect = pygame.Rect(rect)
-        img_rect.center = (rect.center[0], rect.center[1] - self.board.tile_height / 5)
+        img_rect = pygame.Rect(Small_rect)
+        img_rect.center = (Small_rect.center[0], Small_rect.center[1] - self.board.tile_height / 5)
         self.draw(display, img_rect,
                   self.board.tile_width // 2, self.board.tile_height // 4)
     
         #blitz topbar
-        Top_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 10)
-        Top_Rect.topleft = (rect.topleft[0], rect.topleft[1])
+        Top_Rect = pygame.Rect(0,0, Small_rect.width, Small_rect.height // 10)
+        Top_Rect.topleft = (Small_rect.topleft[0], Small_rect.topleft[1])
         top_bar = self.name + " " + self.MV
         drawTextAdjust(display, top_bar, (0,0,0), Top_Rect)
+        pygame.draw.line(display, (0, 0, 0), Top_Rect.bottomleft, Top_Rect.bottomright)
         
         #blitz textbox
-        Bot_Rect = pygame.Rect(0,0, self.board.tile_width, self.board.tile_height // 2)
-        Bot_Rect.center = (rect.center[0], rect.center[1] + 30)
+        Bot_Rect = pygame.Rect(0,0, Small_rect.width, Small_rect.height // 2.2)
+        Bot_Rect.bottomright = (Small_rect.bottomright[0], Small_rect.bottomright[1])
         drawTextAdjust(display, self.Text_Box, (0,0,0), Bot_Rect)
+        pygame.draw.line(display, (0, 0, 0), Bot_Rect.topleft, Bot_Rect.topright)
+        
+        
+        #blitz Type_Rect
+        Type_Rect = pygame.Rect(0,0, Small_rect.width, Small_rect.height // 10)
+        Type_Rect.bottomleft = (Bot_Rect.topleft[0], Bot_Rect.topleft[1])
+        Type_bar = self.type
+        drawTextAdjust(display, Type_bar, (0,0,0), Type_Rect)
+        
+        pygame.draw.line(display, (0, 0, 0), Type_Rect.bottomleft, Type_Rect.bottomright)

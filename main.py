@@ -7,9 +7,6 @@ pygame.init()
 WINDOW_DIM = (900, 600)
 SQUARE_NUMBER = 8
 HAND_SIZE = 7
-screen = pygame.display.set_mode(WINDOW_DIM)
-
-game = game(WINDOW_DIM, SQUARE_NUMBER, HAND_SIZE)
 
 def draw(display):
 	display.fill((100, 100, 100))
@@ -20,6 +17,10 @@ def draw(display):
 
 
 if __name__ == '__main__':
+	screen = pygame.display.set_mode(WINDOW_DIM)
+	game = game(WINDOW_DIM, SQUARE_NUMBER, HAND_SIZE)
+    
+    
 	running = True
 	while running:
 		click_pos = pygame.mouse.get_pos()

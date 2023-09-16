@@ -10,7 +10,7 @@ class Player:
     def __init__(self, color, card_size, off_set, game, Hand_size, LibraryName):
         
         self.Library_bounds = [[off_set[0], off_set[0] + card_size[0] * 1.25], 
-                                [off_set[1], off_set[1] + card_size[1]]]
+                                [off_set[1], off_set[1] + card_size[1] * .5]]
         Hand_offset = [off_set[0] + 1.5 * card_size[0], off_set[1]]
         Hand_dim = [Hand_size * card_size[0], card_size[1]] 
          
@@ -26,8 +26,8 @@ class Player:
         self.LibRect = pygame.Rect(
             self.Library_bounds[0][0],
             self.Library_bounds[1][0],
-            card_size[0] * 1.25,
-            card_size[1])
+            self.Library_bounds[0][1] - self.Library_bounds[0][0],
+            self.Library_bounds[1][1] - self.Library_bounds[1][0])
         pygame.font.init()
         text_font = pygame.font.SysFont('times new roman', 15)
         self.LibText = text_font.render('Draw', False, (0, 0, 0))
