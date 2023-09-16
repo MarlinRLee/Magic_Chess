@@ -68,4 +68,4 @@ class Player:
         
         #draw library
         pygame.draw.rect(display, (128, 64, 0), self.LibRect)
-        display.blit(self.LibText, self.LibRect.topleft)
+        display.blit(self.LibText, self.LibRect.center)

@@ -1,5 +1,5 @@
 import pygame
-from TEXTWRAP import drawTextAdjust
+from text_wrap import drawTextAdjust
 #from chess.pyclass.Board import Board
 from chess.pyclass.Square import Square
 import os
@@ -7,8 +7,7 @@ import os
 #creates a general Piece with no moves
 class Piece:
     def __init__(self, x: int, y: int, color: str, board, name: str, MV: str = "0", 
-                 type: str = "", Text_Box: str = "Default",
-                 imgName: str = ""):
+                 type: str = "", subtype: str = "", Text_Box: str = "Default"):
         self.x = x
         self.y = y
         self.color = color
@@ -17,15 +16,22 @@ class Piece:
         self.name = name
         self.MV = MV
         self.type = type
+        self.subtype = subtype
         self.Text_Box = Text_Box
+
+        imgName = ""
+        if type in ("Piece", "Land"):
+            imgName = subtype.split()[0] + ".png"
+        else:
+            imgName = type.split()[0] + ".png"
         base_path = os.path.dirname(__file__)
         img_path = os.path.join(base_path, '..\\imgs\\' + imgName)
         self.img = pygame.image.load(img_path)
     
     def copy(toCopyPiece):
         newPiece = Piece(toCopyPiece.x,toCopyPiece.y,toCopyPiece.color,toCopyPiece.board,
-                         toCopyPiece.name, toCopyPiece.MV, toCopyPiece.type, toCopyPiece.Text_Box,
-                         "../MTG_Art/doom_blade.jpg")
+                         toCopyPiece.name, toCopyPiece.MV, toCopyPiece.type, toCopyPiece.subtype,
+                         toCopyPiece.Text_Box)
         return newPiece
 
     #change the location of the Piece on the Board
@@ -111,7 +117,7 @@ class Piece:
         #blitz Type_Rect
         Type_Rect = pygame.Rect(0,0, Small_rect.width, Small_rect.height // 10)
         Type_Rect.bottomleft = (Bot_Rect.topleft[0], Bot_Rect.topleft[1])
-        Type_bar = self.type
+        Type_bar = self.type + "  ---  " + self.subtype
         drawTextAdjust(display, Type_bar, (0,0,0), Type_Rect)
         
         pygame.draw.line(display, (0, 0, 0), Type_Rect.bottomleft, Type_Rect.bottomright)

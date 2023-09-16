@@ -99,7 +99,7 @@ class game():
         tree = ET.parse(fileXML)
         root = tree.getroot()
         for magCard in root:
-            Name, Cost, Type, Text_Box, imgName = ("None", "None", "None", "None", "None")
+            Name, Cost, Type, Subtype, Text_Box = ("None", "None", "None", "None", "None")
             if(magCard.tag != "card"):
                 continue
             for cardAttr in magCard:
@@ -108,18 +108,17 @@ class game():
                         Name = cardAttr.text
                     case "cost":
                         Cost = cardAttr.text
+                        if Cost is None:
+                            Cost = ""
                     case "type":
-                        Type = ""
                         Stype = cardAttr.find("supertype")
                         if Stype != None:
-                            Type = Stype.text + " - "
-                            
+                            Type = Stype.text
+                        
                         Ntype = cardAttr.find("subtype")
                         if Ntype != None and Ntype.text != None:
-                            Type += Ntype.text
-                            
+                            Subtype = Ntype.text
                     case "rules":
                         Text_Box = cardAttr.text
-            imgName = "../MTG_Art/doom_blade.jpg"
-            save_map[Name] = Piece(0, 0, None, None, Name, Cost, Type, Text_Box, imgName)
+            save_map[Name] = Piece(0, 0, None, None, Name, Cost, Type, Subtype, Text_Box)
         return save_map

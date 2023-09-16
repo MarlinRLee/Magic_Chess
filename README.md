@@ -13,5 +13,6 @@ TODO:
   - [X] Add the ability to have lands
   - [x] Add the cards to game from xml file
   - [x] Add type to detailed view
+  - [ ] Add tap for pieces and untap button
   - [ ] Do a ton of work to make it not look bad and make it rescalable 
   - [ ] Add remote play
