@@ -30,7 +30,7 @@ class Player:
             self.Library_bounds[1][1] - self.Library_bounds[1][0])
         pygame.font.init()
         text_font = pygame.font.SysFont('times new roman', 15)
-        self.LibText = text_font.render('Draw', False, (0, 0, 0))
+        self.LibText = text_font.render('Click to Draw', False, (0, 0, 0))
 
         
     def handle_click(self, click_pos):
@@ -42,26 +42,18 @@ class Player:
             return None
         self.game.selected_piece = None
         return None
-    
-    def init_Lib(self, LibraryName):
-        deck = []
-                
-        with open(LibraryName) as file:
-            for line in file:
-                num, Name = line.strip().split(",")                   
-                for i in range(int(num)):
-                    newPiece = Piece.copy(self.game.db[Name.strip()])
-                    newPiece.board = self.Hand
-                    newPiece.color = self.color
-                    deck.append(newPiece)
-        return deck
+      
+    def suffle(self):#TODO make it work from the server
+        self.game.send(["Shuffle"])
         
-    def suffle(self):
-        random.shuffle(self.Library)
-        
-    def draw_lib(self):
-        if len(self.Library) != 0:
-            self.Hand.add(self.Library.pop())
+    def draw_lib(self):#TODO make it work from the server
+        returned = self.game.send(["Shuffle", self.game.net.id])
+        if returned != "Empty":
+            Name, Cost, Type, Subtype, Text_Box = returned
+            self.Hand.add(Piece(-1, -1, self.color, self.Hand,
+                                        Name, Cost, Type, Subtype, Text_Box))
+        #if len(self.Library) != 0:
+        #    self.Hand.add(self.Library.pop())
         
     def draw(self, display):
         self.Hand.draw(display, detailed = "Simi")
@@ -69,3 +61,10 @@ class Player:
         #draw library
         pygame.draw.rect(display, (128, 64, 0), self.LibRect)
         display.blit(self.LibText, self.LibRect.center)
+        
+    def init_Lib(self, LibraryName):    
+        with open(LibraryName) as file:
+            for line in file:
+                num, Name = line.strip().split(",")
+                #ask server for info based on on Name            
+                self.game.send(["AddCard", int(num), Name.strip()])

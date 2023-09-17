@@ -1,26 +1,25 @@
+from functools import reduce
 import tkinter
 import tkinter.filedialog
 import pygame
 from chess.pyclass.Board import Board
-from chess.pyclass.Piece import Piece
 from chess.pyclass.Player import Player
-import xml.etree.ElementTree as ET
+
+from Network import Network
 
 class game():
     def __init__(self, window_size: int, num_squares: int = 8, num_cards: int = 7):
-        self.font = pygame.font.Font('freesansbold.ttf', 8)
+        self.font = pygame.font.Font('freesansbold.ttf', 24)
         self.box_font = self.font
         self.selected_piece = None
-        self.Board = None
         self.Players = []
-        self.life = [0, 0]
-        self.db = self.get_card_db("../text_magic_set.xml")
+        self.net = Network()
+        
         self.gen_game(window_size, num_squares, num_cards)
 
     def gen_game(self, window_size: int, num_squares: int, num_cards: int):
         """creates the Board object and the two hand objects needed for a normal game"""
         X, Y = window_size
-        
         #Create Board
         Board_dim = (3 * X // 5, 3 * Y // 5)
         Board_offset = (X // 3,  7 * Y // 40) #Do math to put Board between hands
@@ -39,6 +38,7 @@ class game():
         Small_Card_dim = (Card_dim[0] * 3 / 4, Card_dim[1] * 3 / 4)
         Player_offset = (1 * X / 3, .01 * Y)
         #deckFile = self.prompt_file()
+        deckFile = "Test_Deck.txt"
         self.Players.append(Player("White",  Small_Card_dim, Player_offset, self, Hand_size = num_cards, 
                                    LibraryName = deckFile))
         
@@ -74,6 +74,7 @@ class game():
                 bounds[1][0] <= click[1] <= bounds[1][1])
 
     def draw(self, display):
+        display.fill((100, 100, 100))
         if self.selected_piece is not None:
             self.selected_piece.set_highlight()
         
@@ -85,6 +86,7 @@ class game():
         self.Viewer.Draw_Select(display)
         
         self.Board.draw(display)
+        pygame.display.update()
         
     def prompt_file(self):
         """Create a Tk file dialog and cleanup when finished"""
@@ -93,32 +95,56 @@ class game():
         file_name = tkinter.filedialog.askopenfilename(parent=top)
         top.destroy()
         return file_name
+
     
-    def get_card_db(self, fileXML):
-        save_map = {}
-        tree = ET.parse(fileXML)
-        root = tree.getroot()
-        for magCard in root:
-            Name, Cost, Type, Subtype, Text_Box = ("None", "None", "None", "None", "None")
-            if(magCard.tag != "card"):
-                continue
-            for cardAttr in magCard:
-                match cardAttr.tag:
-                    case "name":
-                        Name = cardAttr.text
-                    case "cost":
-                        Cost = cardAttr.text
-                        if Cost is None:
-                            Cost = ""
-                    case "type":
-                        Stype = cardAttr.find("supertype")
-                        if Stype != None:
-                            Type = Stype.text
+    
+    def run(self, screen):
+        clock = pygame.time.Clock()
+        running = True
+        while running:
+            clock.tick(60)
+            click_pos = pygame.mouse.get_pos()
+            for event in pygame.event.get():
+                # Quit the game if the user presses the close button
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN: 
+                    # If the mouse is clicked
+                    if event.button == 1:
+                        self.send(["Click", str(click_pos[0]), str(click_pos[1])])
+                        self.handle_click(click_pos)
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        self.selected_piece = None   
                         
-                        Ntype = cardAttr.find("subtype")
-                        if Ntype != None and Ntype.text != None:
-                            Subtype = Ntype.text
-                    case "rules":
-                        Text_Box = cardAttr.text
-            save_map[Name] = Piece(0, 0, None, None, Name, Cost, Type, Subtype, Text_Box)
-        return save_map
+            serverMsg = ""
+            while serverMsg != "Noted":
+                reply = self.send(["todo"])
+                print("===========")
+                print(reply)
+                print("===========")
+                arr = reply.split(":")
+                mesg = arr[1].split(",")
+                match mesg[0]:
+                    case "Click":
+                        self.handle_click(self.parse_data(reply))
+                    case "Draw":
+                        pass#TODO
+                
+            #handle other client click
+            
+            # Draw the Board
+            self.draw(screen)
+            
+    def send(self, data_array):
+        flat_data = reduce(lambda x, y: str(x) + "," + str(y), data_array)
+        data = str(self.net.id) + ":" + flat_data
+        reply = self.net.send(data)
+        return reply
+    
+    def parse_data(self, data):
+        try:
+            data_array = data.split(":")[1].split(",")
+            return (int(data_array[0]), int(data_array[1]))
+        except:
+            return (0, 0)

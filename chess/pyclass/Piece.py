@@ -28,12 +28,6 @@ class Piece:
         img_path = os.path.join(base_path, '..\\imgs\\' + imgName)
         self.img = pygame.image.load(img_path)
     
-    def copy(toCopyPiece):
-        newPiece = Piece(toCopyPiece.x,toCopyPiece.y,toCopyPiece.color,toCopyPiece.board,
-                         toCopyPiece.name, toCopyPiece.MV, toCopyPiece.type, toCopyPiece.subtype,
-                         toCopyPiece.Text_Box)
-        return newPiece
-
     #change the location of the Piece on the Board
     def move(self, board, x: int, y: int) -> None:
         if self.isLand:
