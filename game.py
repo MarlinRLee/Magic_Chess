@@ -3,6 +3,7 @@ import tkinter
 import tkinter.filedialog
 import pygame
 from chess.pyclass.Board import Board
+from chess.pyclass.Piece import Piece
 from chess.pyclass.Player import Player
 
 from Network import Network
@@ -54,15 +55,19 @@ class game():
         self.Stack = Board(Stack_dim, stack_offset, self, size_x = 1, size_y = 5)
 
 
-    def handle_click(self, click_pos):
+    def handle_click(self, click_pos, internal = True):
         if self.inbound(click_pos, self.Board.bounds):
+                if internal:
+                    self.send(["Click", str(click_pos[0]), str(click_pos[1])])
                 self.Board.handle_click(click_pos)
                 return None
         for player in self.Players:
             if self.inbound(click_pos, player.bounds):
-                player.handle_click(click_pos)
+                player.handle_click(click_pos, internal)
                 return None
         if self.inbound(click_pos, self.Stack.bounds):
+            if internal:
+                self.send(["Click", str(click_pos[0]), str(click_pos[1])])
             self.Stack.handle_click(click_pos)
             return None
         game.selected_piece = None
@@ -111,7 +116,6 @@ class game():
                 elif event.type == pygame.MOUSEBUTTONDOWN: 
                     # If the mouse is clicked
                     if event.button == 1:
-                        self.send(["Click", str(click_pos[0]), str(click_pos[1])])
                         self.handle_click(click_pos)
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
@@ -120,16 +124,20 @@ class game():
             serverMsg = ""
             while serverMsg != "Noted":
                 reply = self.send(["todo"])
-                print("===========")
-                print(reply)
-                print("===========")
-                arr = reply.split(":")
-                mesg = arr[1].split(",")
+                if reply != str(self.net.id) + "::Noted": print(reply)
+                id, serverMsg = reply.split("::")
+                mesg = serverMsg.split(",,,")
+                if mesg[0] != "Noted": print(mesg[0])
                 match mesg[0]:
                     case "Click":
-                        self.handle_click(self.parse_data(reply))
+                        X,Y = mesg[1:]
+                        self.handle_click((int(X), int(Y)), internal = False)
                     case "Draw":
-                        pass#TODO
+                        Name, Cost, Type, Subtype, Text_Box = mesg[1:]
+                        print("Draw:" + Name + ", " + Cost)
+                        toDrawPlayer = self.Players[int(id)]
+                        toDrawPlayer.Hand.add(Piece(-1, -1, toDrawPlayer.color, toDrawPlayer.Hand,
+                                        Name, Cost, Type, Subtype, Text_Box))
                 
             #handle other client click
             
@@ -137,14 +145,14 @@ class game():
             self.draw(screen)
             
     def send(self, data_array):
-        flat_data = reduce(lambda x, y: str(x) + "," + str(y), data_array)
-        data = str(self.net.id) + ":" + flat_data
+        flat_data = reduce(lambda x, y: str(x) + ",,," + str(y), data_array)
+        data = str(self.net.id) + "::" + flat_data
         reply = self.net.send(data)
         return reply
     
     def parse_data(self, data):
         try:
-            data_array = data.split(":")[1].split(",")
+            data_array = data.split("::")[1].split(",,,")
             return (int(data_array[0]), int(data_array[1]))
         except:
             return (0, 0)

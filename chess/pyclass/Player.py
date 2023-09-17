@@ -33,12 +33,14 @@ class Player:
         self.LibText = text_font.render('Click to Draw', False, (0, 0, 0))
 
         
-    def handle_click(self, click_pos):
+    def handle_click(self, click_pos, internal = True):
         if self.game.inbound(click_pos, self.Hand.bounds):
+            if internal:
+                self.game.send(["Click", str(click_pos[0]), str(click_pos[1])])
             self.Hand.handle_click(click_pos)
             return None
         if self.game.inbound(click_pos, self.Library_bounds):
-            self.draw_lib()
+            self.game.send(["Draw", self.game.net.id])
             return None
         self.game.selected_piece = None
         return None
@@ -46,14 +48,6 @@ class Player:
     def suffle(self):#TODO make it work from the server
         self.game.send(["Shuffle"])
         
-    def draw_lib(self):#TODO make it work from the server
-        returned = self.game.send(["Shuffle", self.game.net.id])
-        if returned != "Empty":
-            Name, Cost, Type, Subtype, Text_Box = returned
-            self.Hand.add(Piece(-1, -1, self.color, self.Hand,
-                                        Name, Cost, Type, Subtype, Text_Box))
-        #if len(self.Library) != 0:
-        #    self.Hand.add(self.Library.pop())
         
     def draw(self, display):
         self.Hand.draw(display, detailed = "Simi")

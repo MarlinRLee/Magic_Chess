@@ -45,32 +45,42 @@ class server:
                     conn.send(str.encode("Goodbye"))
                     break
                 else:
-                    arr = reply.split(":")
-                    if arr[1] != "-1,-1": print("Recieved: " + reply)
+                    arr = reply.split("::")
+                    if arr[1] != "todo": print("Recieved: " + reply)
                     id = int(arr[0])                 
             
-                    message = arr[1].split(",")
+                    message = arr[1].split(",,,")
                     match message[0]:
                         case "AddCard":
-                            for i in range(message[1]):
-                                self.librarys[self.currentId].append(message[2])
+                            for i in range(int(message[1])):
+                                self.librarys[id].append(message[2].strip())
+
                         case "Shuffle":
-                            random.shuffle(self.librarys[message[1]])
+                            random.shuffle(self.librarys[id])
                         case "Draw":
-                            if len(self.librarys[message[1]]) != 0:
-                                name = self.librarys[message[1]].pop()
+                            if len(self.librarys[id]) != 0:
+                                name = self.librarys[id].pop()
                                 Cost, Type, Subtype, Text_Box = self.db[name]
-                                reply = id + ":Draw," + name + "," + Cost + "," + Type + "," + Subtype + "," + Text_Box
+                                print(id)
+                                print(name)
+                                reply = str(id) + "::Draw,,," + name + ",,," + Cost + ",,," + Type + ",,," + Subtype + ",,," + Text_Box
+                                print("3")
                                 self.addToDO(reply, -1)
+                                print(self.todoque)
                         case "Click":
                             self.addToDO(reply, id)
                         case "todo":
                             if len(self.todoque[id]) != 0:
-                                conn.sendall(str.encode(self.todoque[id].pop(0)))
-                    conn.sendall(str.encode(id + ":Noted"))
+                                print("todo work exists")
+                                ret = self.todoque[id].pop(0)
+                                print("Sent: " + ret)
+                                conn.sendall(str.encode(ret))
+                                continue
+                    conn.sendall(str.encode(str(id)+ "::Noted"))
             except:
                 break   
         print("Connection Closed")
+        print(self.todoque)
         conn.close()
     
     def addToDO(self, mesg, skipID):
