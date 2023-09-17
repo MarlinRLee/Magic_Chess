@@ -3,7 +3,10 @@ from chess.pyclass.Square import Square
 from chess.pyclass.Piece import Piece
 
 class Board:
-    def __init__(self, board_size, off_Set, game, size_x = 8, size_y = 8, colors = None):
+    def __init__(self, board_size, off_Set, game, size_x = 8, size_y = 8, 
+                 colors = None, isHand = False):
+        
+        self.isHand = isHand
 
         self.game = game
 

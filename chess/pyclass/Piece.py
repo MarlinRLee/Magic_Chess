@@ -28,28 +28,38 @@ class Piece:
         img_path = os.path.join(base_path, '..\\imgs\\' + imgName)
         self.img = pygame.image.load(img_path)
     
+    #moves the piece and handle all the acounting
+    def move_piece(self, square: Square):
+        self.move(square.board, square.x, square.y)
+    
     #change the location of the Piece on the Board
     def move(self, board, x: int, y: int) -> None:
         if self.isLand:
             self.board.squares[self.x][self.y].occupying_Land = None
         else:
             self.board.squares[self.x][self.y].occupying_piece = None
+        old_x = self.x
+        old_y = self.y
+        old_board = self.board
         self.x = x
         self.y = y
-        self.board = board
+        
+        target_square = board.squares[x][y]
+        if old_board.isHand and board.isHand:
+            if target_square.occupying_Land != None:
+                target_square.occupying_Land.move(old_board, old_x, old_y)
+            elif target_square.occupying_piece != None:
+                target_square.occupying_piece.move(old_board, old_x, old_y)
         if self.isLand:
-            self.board.squares[x][y].occupying_Land = self
+            target_square.occupying_Land = self
         else:
-            self.board.squares[x][y].occupying_piece = self
+            target_square.occupying_piece = self
+        self.board = board
 
 
     #flag the square the piece is on for highlighting
     def set_highlight(self, default: str = "None") -> None:
         (self.board.squares[self.x][self.y]).set_highlight(default)
-
-    #moves the piece and handle all the acounting
-    def move_piece(self, square: Square):
-        self.move(square.board, square.x, square.y)
 
     def draw(self, display, rect, width = None, height = None):
         if width is None:
