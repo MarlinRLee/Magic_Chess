@@ -44,7 +44,7 @@ class Piece:
 
 
     #flag the square the piece is on for highlighting
-    def set_highlight(self, default: bool = True) -> None:
+    def set_highlight(self, default: str = "None") -> None:
         (self.board.squares[self.x][self.y]).set_highlight(default)
 
     #moves the piece and handle all the acounting
@@ -56,19 +56,24 @@ class Piece:
             width = 3 * self.board.tile_width // 4
         if height is None:
             height = 3 * self.board.tile_height // 4
+        
         Drawimg = pygame.transform.scale(self.img, (width, height))
         if(self.color == "White"):
             Drawimg = pygame.transform.flip(Drawimg, True, True)
         centering_rect = Drawimg.get_rect()
         centering_rect.center = rect.center
         display.blit(Drawimg, centering_rect.topleft)
-        
-    def simi_detailed_draw(self, display, rect):
-        #draw inner shape
+                
+    def Blank_draw(self, display, rect):
         Small_rect = rect.scale_by(.9)
         Small_rect.center = rect.center
         pygame.draw.rect(display, (200, 200, 200), 
-                         Small_rect) 
+                         Small_rect)
+        return Small_rect
+    
+    def simi_detailed_draw(self, display, rect):
+        #draw inner shape
+        Small_rect = self.Blank_draw(display, rect)
         
         
         #blitz topbar

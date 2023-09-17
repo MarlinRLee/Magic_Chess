@@ -13,6 +13,7 @@ class game():
         self.font = pygame.font.Font('freesansbold.ttf', 24)
         self.box_font = self.font
         self.selected_piece = None
+        self.OpSelected_piece = None
         self.Players = []
         self.net = Network()
         
@@ -56,23 +57,41 @@ class game():
 
 
     def handle_click(self, click_pos, internal = True):
-        if self.inbound(click_pos, self.Board.bounds):
-                if internal:
-                    self.send(["Click", str(click_pos[0]), str(click_pos[1])])
-                self.Board.handle_click(click_pos)
-                return None
-        for player in self.Players:
-            if self.inbound(click_pos, player.bounds):
-                player.handle_click(click_pos, internal)
-                return None
-        if self.inbound(click_pos, self.Stack.bounds):
-            if internal:
-                self.send(["Click", str(click_pos[0]), str(click_pos[1])])
-            self.Stack.handle_click(click_pos)
+        if (self.click_board(click_pos, "Main", self.Board, internal) or
+            self.click_board(click_pos, "Stack", self.Stack, internal)):
             return None
-        game.selected_piece = None
+            
+        if self.inbound(click_pos, self.Players[0].bounds):
+            self.Players[0].handle_click(click_pos, internal)
+            return None
+
+        if internal:
+            game.selected_piece = None
+        else:
+            game.OpSelected_piece = None
         print("plz click inbound")
-        return None
+    
+    def click_board(self, click_pos, Name, Board, internal):
+        if self.inbound(click_pos, Board.bounds):
+                x, y = Board.pix_to_cord(click_pos)
+                Board.handle_click((x,y), internal)
+                if internal:
+                    if Name == "Main":
+                        y = self.Board.size_x - y - 1
+                        x = self.Board.size_y - x - 1
+                    self.send(["Click", Name, str(x), str(y)])
+                return True
+        else:
+            return False
+    
+    def handle_click_server(self, Name, X, Y):
+        if Name == "Main":
+            self.Board.handle_click((X, Y), internal = False)
+        elif Name == "Stack":
+            self.Stack.handle_click((X, Y), internal = False)
+        elif Name == "Hand":
+            self.Players[1].Hand.handle_click((X, Y), internal = False)
+    
     
     def inbound(self, click, bounds):
         return (bounds[0][0] <= click[0] <= bounds[0][1] and
@@ -81,10 +100,12 @@ class game():
     def draw(self, display):
         display.fill((100, 100, 100))
         if self.selected_piece is not None:
-            self.selected_piece.set_highlight()
+            self.selected_piece.set_highlight("Team")
+        if self.OpSelected_piece is not None:
+            self.OpSelected_piece.set_highlight("Opp")#todo diffrent color
         
-        for player in self.Players:
-            player.draw(display)
+        self.Players[0].draw(display)
+        self.Players[1].draw(display, Hidden = True)
         
         self.Stack.draw(display, detailed = "Min")
         
@@ -116,10 +137,7 @@ class game():
                 elif event.type == pygame.MOUSEBUTTONDOWN: 
                     # If the mouse is clicked
                     if event.button == 1:
-                        self.handle_click(click_pos)
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
-                        self.selected_piece = None   
+                        self.handle_click(click_pos) 
                         
             serverMsg = ""
             while serverMsg != "Noted":
@@ -130,12 +148,13 @@ class game():
                 if mesg[0] != "Noted": print(mesg[0])
                 match mesg[0]:
                     case "Click":
-                        X,Y = mesg[1:]
-                        self.handle_click((int(X), int(Y)), internal = False)
+                        #Board, 
+                        Name, X, Y = mesg[1:]
+                        self.handle_click_server(Name, int(X), int(Y))
                     case "Draw":
                         Name, Cost, Type, Subtype, Text_Box = mesg[1:]
-                        print("Draw:" + Name + ", " + Cost)
-                        toDrawPlayer = self.Players[int(id)]
+                        print("Draw:" + self.net.id + ", " + id + ", "  + Name + ", " + Cost)
+                        toDrawPlayer = self.Players[int(id) != int(self.net.id)]
                         toDrawPlayer.Hand.add(Piece(-1, -1, toDrawPlayer.color, toDrawPlayer.Hand,
                                         Name, Cost, Type, Subtype, Text_Box))
                 

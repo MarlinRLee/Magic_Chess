@@ -15,4 +15,7 @@ TODO:
   - [x] Add type to detailed view
   - [ ] Add tap for pieces and untap button
   - [ ] Do a ton of work to make it not look bad and make it rescalable 
-  - [ ] Add remote play
+  - [x] Add remote play
+  - [x] remote play have mirror set ups
+  - [x] remote play hides hand info
+  - [x] click hand swichs cards instead of eating them

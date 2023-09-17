@@ -18,23 +18,26 @@ class Board:
         self.height = height
         self.tile_width = width // size_x
         self.tile_height = height // size_y
+        
+        if colors is None:#white_color, black_color, high_white, high_black = colors
+            colors = [[(155, 155, 194), (53, 53, 53)], 
+                    [(155, 255, 194), (53, 153, 53)], 
+                    [(255, 155, 194), (153, 53, 53)]]   
+        
+        self.Base_Color, self.Team_Highlight, self.Opp_Highlight = colors
 
-        self.squares = self.generate_squares(colors)
+        self.squares = self.generate_squares()
 
-    def generate_squares(self, colors):
+    def generate_squares(self):
         output = []
         for x in range(self.size_x):
             output.append([])
             for y in range(self.size_y):
+                color = 'White' if (x + y) % 2 == 0 else 'Black'
                 output[x].append(
-                    Square(x, y, self.tile_width, self.tile_height, self.offset, self, colors)
+                    Square(x, y, self.tile_width, self.tile_height, self.offset, self, color)
                 )
         return output
-
-    def setup_board(self):
-        for color, row in [("White", 0), ("Black", self.size_y - 1)]:
-            self.squares[self.size_y//2][row].occupying_piece = Piece(self.size_x//2, row, color, 
-                                                                    self,"K", type = "Piece", subtype = "king")
 
     def inbound(self,x,y):
         return 0 <= x < self.size_x and 0 <= y < self.size_y
@@ -45,22 +48,33 @@ class Board:
         y = (pix_y - self.offset[1]) // self.tile_height
         return int(x), int(y)
 
-    def handle_click(self, click_pos):
-        x, y = self.pix_to_cord(click_pos)
+    def handle_click(self, clicked, internal = True):
+        x, y = clicked
+        relPiece = self.game.selected_piece if internal else self.game.OpSelected_piece
         if not self.inbound(x, y): return None
         clicked_square = self.squares[x][y]
         #may be None
         clicked_piece = clicked_square.occupying_piece
         if clicked_piece is None:
             clicked_piece = clicked_square.occupying_Land
-        if (clicked_piece is not None and 
-            self.game.selected_piece is None):
-            self.game.selected_piece = clicked_piece
+            
+        if (clicked_piece is not None and relPiece is None):
+            if internal:
+                self.game.selected_piece = clicked_piece
+                relPiece = clicked_piece
+            else:
+                self.game.OpSelected_piece = clicked_piece
+                relPiece = clicked_piece
             return None
-        if self.game.selected_piece is None:
+        
+        if relPiece is None:
             return None
-        self.game.selected_piece.move_piece(clicked_square)
-        self.game.selected_piece = None
+        
+        relPiece.move_piece(clicked_square)
+        if internal:
+            self.game.selected_piece = None
+        else:
+            self.game.OpSelected_piece = None
         return None
 
     def draw(self, display, detailed = "Min"):
@@ -91,5 +105,10 @@ class Board:
                         self.squares[x][y].occupying_piece = Piece
                     Piece.x = x
                     Piece.y = y
-                    return
-        return
+                    return None
+                
+    def setup_board(self):
+        self.squares[self.size_x//2][0].occupying_piece = Piece(self.size_x//2, 0, "White", 
+                                                            self,"K", type = "Piece", subtype = "king")
+        self.squares[self.size_x//2 - 1][self.size_y - 1].occupying_piece = Piece(self.size_x//2 - 1, self.size_y - 1, "Black", 
+                                                            self,"K", type = "Piece", subtype = "king")

@@ -18,7 +18,9 @@ class Player:
                        [off_set[1], off_set[1] + card_size[1]]]
 
         self.Hand = Board(Hand_dim, Hand_offset, game, size_x = Hand_size, size_y = 1,
-                            colors = [(220, 208, 194), (220, 208, 194), (100, 249, 83), (100, 249, 83)])
+                            colors = [[(220, 208, 194), (220, 208, 194)], 
+                                      [(100, 249, 83), (100, 249, 83)], 
+                                      [(249, 100, 83), (249, 100, 83)]])
         self.color = color
         self.game = game
         self.Library = self.init_Lib(LibraryName)
@@ -34,27 +36,32 @@ class Player:
 
         
     def handle_click(self, click_pos, internal = True):
-        if self.game.inbound(click_pos, self.Hand.bounds):
-            if internal:
-                self.game.send(["Click", str(click_pos[0]), str(click_pos[1])])
-            self.Hand.handle_click(click_pos)
+        if self.game.click_board(click_pos, "Hand", self.Hand, internal):
             return None
+        
         if self.game.inbound(click_pos, self.Library_bounds):
             self.game.send(["Draw", self.game.net.id])
             return None
-        self.game.selected_piece = None
-        return None
+        if internal:
+            self.game.selected_piece = None
+        else:
+            self.game.OpSelected_piece = None
       
     def suffle(self):#TODO make it work from the server
         self.game.send(["Shuffle"])
         
         
-    def draw(self, display):
-        self.Hand.draw(display, detailed = "Simi")
+    def draw(self, display, Hidden = False):
+        if Hidden:
+            card_show = "Blank"
+        else:
+            #draw library
+            card_show = "Simi"
+            pygame.draw.rect(display, (128, 64, 0), self.LibRect)
+            display.blit(self.LibText, self.LibRect.midleft)
+        self.Hand.draw(display, detailed = card_show)
         
-        #draw library
-        pygame.draw.rect(display, (128, 64, 0), self.LibRect)
-        display.blit(self.LibText, self.LibRect.center)
+
         
     def init_Lib(self, LibraryName):    
         with open(LibraryName) as file:

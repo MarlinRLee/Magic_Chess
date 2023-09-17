@@ -5,8 +5,8 @@ import xml.etree.ElementTree as ET
   
 class server:
     def __init__(self):
-        self.currentId = 0
-        self.todoque = []        
+        self.FreeId = 0
+        self.todoque = [[],[]]        
         self.soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server = 'localhost'
         port = 5555
@@ -31,11 +31,11 @@ class server:
             
     def threaded_client(self, conn):
         #Library stuff
-        self.librarys[self.currentId] = []
-        self.todoque.append([])
+        self.librarys[self.FreeId] = []
+        self.todoque[self.FreeId] = []
         
-        conn.send(str.encode(str(self.currentId)))
-        self.currentId += 1
+        conn.send(str.encode(str(self.FreeId)))
+        self.FreeId = (self.FreeId + 1) % 2
         reply = ''
         while True:
             try:
@@ -61,17 +61,12 @@ class server:
                             if len(self.librarys[id]) != 0:
                                 name = self.librarys[id].pop()
                                 Cost, Type, Subtype, Text_Box = self.db[name]
-                                print(id)
-                                print(name)
                                 reply = str(id) + "::Draw,,," + name + ",,," + Cost + ",,," + Type + ",,," + Subtype + ",,," + Text_Box
-                                print("3")
                                 self.addToDO(reply, -1)
-                                print(self.todoque)
                         case "Click":
                             self.addToDO(reply, id)
                         case "todo":
                             if len(self.todoque[id]) != 0:
-                                print("todo work exists")
                                 ret = self.todoque[id].pop(0)
                                 print("Sent: " + ret)
                                 conn.sendall(str.encode(ret))
@@ -84,7 +79,7 @@ class server:
         conn.close()
     
     def addToDO(self, mesg, skipID):
-        for i in range(self.currentId):
+        for i in range(2):
             if i == skipID:
                 continue
             self.todoque[i].append(mesg)
