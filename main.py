@@ -3,6 +3,9 @@ import pygame
 from game import game
 
 pygame.init()
+pygame.display.set_caption("Magic Chess")
+pygame_icon = pygame.image.load('chess\\imgs\\artifact.png')
+pygame.display.set_icon(pygame_icon)
 
 WINDOW_DIM = (900, 600)
 SQUARE_NUMBER = 8

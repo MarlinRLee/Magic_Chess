@@ -25,7 +25,6 @@ class Player:
         self.color = color
         self.game = game
         self.Library = self.init_Lib(LibraryName)
-        self.suffle()
         self.LibRect = pygame.Rect(
             self.Library_bounds[0][0],
             self.Library_bounds[1][0],
@@ -65,8 +64,11 @@ class Player:
 
         
     def init_Lib(self, LibraryName):    
+        if LibraryName == None:
+            return
         with open(LibraryName) as file:
             for line in file:
                 num, Name = line.strip().split(",")
                 #ask server for info based on on Name            
                 self.game.send(["AddCard", int(num), Name.strip()])
+        self.suffle()

@@ -31,7 +31,7 @@ class game():
         Card_dim = (X // 10, Y // 5)
         #Create your hand
         Player_offset = (X / 8, Y - Card_dim[1] - .01 * Y)#better calcs
-        #deckFile = self.prompt_file()
+        deckFile = self.prompt_file()
         deckFile = "Test_Deck.txt"
         self.Players.append(Player("Black", Card_dim, Player_offset, self, Hand_size = num_cards, 
                                    LibraryName = deckFile))
@@ -42,7 +42,7 @@ class game():
         #deckFile = self.prompt_file()
         deckFile = "Test_Deck.txt"
         self.Players.append(Player("White",  Small_Card_dim, Player_offset, self, Hand_size = num_cards, 
-                                   LibraryName = deckFile))
+                                   LibraryName = None))
         
      
         #Create CardViewer
@@ -142,10 +142,10 @@ class game():
             serverMsg = ""
             while serverMsg != "Noted":
                 reply = self.send(["todo"])
-                if reply != str(self.net.id) + "::Noted": print(reply)
+                #if reply != str(self.net.id) + "::Noted": print(reply)
                 id, serverMsg = reply.split("::")
                 mesg = serverMsg.split(",,,")
-                if mesg[0] != "Noted": print(mesg[0])
+                #if mesg[0] != "Noted": print(mesg[0])
                 match mesg[0]:
                     case "Click":
                         #Board, 
@@ -153,7 +153,6 @@ class game():
                         self.handle_click_server(Name, int(X), int(Y))
                     case "Draw":
                         Name, Cost, Type, Subtype, Text_Box = mesg[1:]
-                        print("Draw:" + self.net.id + ", " + id + ", "  + Name + ", " + Cost)
                         toDrawPlayer = self.Players[int(id) != int(self.net.id)]
                         toDrawPlayer.Hand.add(Piece(-1, -1, toDrawPlayer.color, toDrawPlayer.Hand,
                                         Name, Cost, Type, Subtype, Text_Box))

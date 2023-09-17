@@ -10,7 +10,8 @@ class server:
         self.soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server = 'localhost'
         port = 5555
-        #server_ip = socket.gethostbyname(server)
+        server_ip = socket.gethostbyname(server)
+        print("server ip: " + server_ip)
 
         #Card DB Stuff
         self.db = self.get_card_db("../text_magic_set.xml")
@@ -46,7 +47,7 @@ class server:
                     break
                 else:
                     arr = reply.split("::")
-                    if arr[1] != "todo": print("Recieved: " + reply)
+                    #if arr[1] != "todo": print("Recieved: " + reply)
                     id = int(arr[0])                 
             
                     message = arr[1].split(",,,")
@@ -68,14 +69,13 @@ class server:
                         case "todo":
                             if len(self.todoque[id]) != 0:
                                 ret = self.todoque[id].pop(0)
-                                print("Sent: " + ret)
+                                #print("Sent: " + ret)
                                 conn.sendall(str.encode(ret))
                                 continue
                     conn.sendall(str.encode(str(id)+ "::Noted"))
             except:
                 break   
         print("Connection Closed")
-        print(self.todoque)
         conn.close()
     
     def addToDO(self, mesg, skipID):

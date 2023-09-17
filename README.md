@@ -18,4 +18,4 @@ TODO:
   - [x] Add remote play
   - [x] remote play have mirror set ups
   - [x] remote play hides hand info
-  - [ ] click hand swichs cards instead of eating them
+  - [x] click hand swichs cards instead of eating them
