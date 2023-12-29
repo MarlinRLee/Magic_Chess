@@ -50,6 +50,9 @@ This will only work when the server is up which it will not be most of the time 
   - [ ] Add tap for pieces and untap button
   - [ ] Do a ton of work to make it not look bad and make it rescalable
   - [ ] Add graveyard
+  - [ ] Add way to have multiple games going.
+  - [ ] Save state for crashing
+  - [ ] Remake with javascript for webbased.
   - [x] restructure by merging pieces and cards
   - [x] Add the ability to move pieces wherever
   - [x] Add library to draw from
