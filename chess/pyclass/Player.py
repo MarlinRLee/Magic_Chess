@@ -24,7 +24,10 @@ class Player:
                             isHand = True)
         self.color = color
         self.game = game
-        self.Library = self.init_Lib(LibraryName)
+        if LibraryName != None:
+            self.init_Lib(LibraryName)
+            self.suffle()
+            
         self.LibRect = pygame.Rect(
             self.Library_bounds[0][0],
             self.Library_bounds[1][0],
@@ -45,9 +48,10 @@ class Player:
         if internal:
             self.game.selected_piece = None
         else:
-            self.game.OpSelected_piece = None
+            self.game.op_selected_piece = None
       
     def suffle(self):#TODO make it work from the server
+        
         self.game.send(["Shuffle"])
         
         
@@ -64,11 +68,8 @@ class Player:
 
         
     def init_Lib(self, LibraryName):    
-        if LibraryName == None:
-            return
         with open(LibraryName) as file:
             for line in file:
                 num, Name = line.strip().split(",")
                 #ask server for info based on on Name            
                 self.game.send(["AddCard", int(num), Name.strip()])
-        self.suffle()

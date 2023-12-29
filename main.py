@@ -1,6 +1,6 @@
 import pygame
 
-from game import game
+from Game import Game
 
 pygame.init()
 pygame.display.set_caption("Magic Chess")
@@ -13,7 +13,7 @@ HAND_SIZE = 7
 
 if __name__ == '__main__':
 	screen = pygame.display.set_mode(WINDOW_DIM)
-	game = game(WINDOW_DIM, SQUARE_NUMBER, HAND_SIZE)
+	game = Game(WINDOW_DIM, SQUARE_NUMBER, HAND_SIZE)
 	game.run(screen)
 
   

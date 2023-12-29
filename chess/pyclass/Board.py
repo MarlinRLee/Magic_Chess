@@ -53,7 +53,7 @@ class Board:
 
     def handle_click(self, clicked, internal = True):
         x, y = clicked
-        relPiece = self.game.selected_piece if internal else self.game.OpSelected_piece
+        relPiece = self.game.selected_piece if internal else self.game.op_selected_piece
         if not self.inbound(x, y): return None
         clicked_square = self.squares[x][y]
         #may be None
@@ -66,7 +66,7 @@ class Board:
                 self.game.selected_piece = clicked_piece
                 relPiece = clicked_piece
             else:
-                self.game.OpSelected_piece = clicked_piece
+                self.game.op_selected_piece = clicked_piece
                 relPiece = clicked_piece
             return None
         
@@ -77,7 +77,7 @@ class Board:
         if internal:
             self.game.selected_piece = None
         else:
-            self.game.OpSelected_piece = None
+            self.game.op_selected_piece = None
         return None
 
     def draw(self, display, detailed = "Min"):
