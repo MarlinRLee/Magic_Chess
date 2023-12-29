@@ -4,7 +4,7 @@ a quick prototype of a merging of chess and magic
 
 The goal is for this to function as barebone version of Cockatrice for Magic chess
 
-# For new users (Taden, maybe Lucus)
+# For new users (Taden, maybe Lucsa)
 
 ### Installing Python
 1. **Download Python**: Visit the [official Python website](https://www.python.org/downloads/) and download the appropriate version for your operating system (Windows, MacOS, Linux). I would download version 3.10 because thats what I used. Any version 3.10 or later should work.
