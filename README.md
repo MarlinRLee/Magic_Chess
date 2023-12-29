@@ -35,6 +35,11 @@ Follow these steps to get the project up and running on your local machine.
    ```
 
 ## Running the Project
+If you have make working on your computer
+```
+make
+```
+otherwise
 ```
 python main.py
 ```
