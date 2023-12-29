@@ -142,8 +142,6 @@ class Game:
         while server_msg != "Noted":
             reply = self.send(["todo"])
             id, server_msg = reply.split("::")
-            if server_msg != "Noted":
-                print(f"Reply received: {reply}")
             self.process_server_message(id, server_msg)
             
 
