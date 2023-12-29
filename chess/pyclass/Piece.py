@@ -26,7 +26,11 @@ class Piece:
             imgName = type.split()[0] + ".png"
         base_path = os.path.dirname(__file__)
         img_path = os.path.join(base_path, '..\\imgs\\' + imgName)
-        self.img = pygame.image.load(img_path)
+        try:
+            self.img = pygame.image.load(img_path)
+        except:
+            self.img = pygame.Surface((10, 10))
+            self.img.fill((255, 255, 255))
     
     #moves the piece and handle all the acounting
     def move_piece(self, square: Square):
