@@ -7,7 +7,7 @@ The goal is for this to function as barebone version of Cockatrice for Magic che
 # For new users (Taden, maybe Lucus)
 
 ### Installing Python
-1. **Download Python**: Visit the [official Python website](https://www.python.org/downloads/) and download the appropriate version for your operating system (Windows, MacOS, Linux).
+1. **Download Python**: Visit the [official Python website](https://www.python.org/downloads/) and download the appropriate version for your operating system (Windows, MacOS, Linux). I would download version 3.10 because thats what I used. Any version 3.10 or later should work.
 2. **Install Python**: Open the downloaded file and follow the installation instructions. Make sure to check the box that says "Add Python to PATH" during installation.
 
 ### Installing Git
