@@ -48,7 +48,8 @@ This will only work when the server is up which it will not be most of the time 
 
 # TODO:
   - [ ] Add tap for pieces and untap button
-  - [ ] Do a ton of work to make it not look bad and make it rescalable 
+  - [ ] Do a ton of work to make it not look bad and make it rescalable
+  - [ ] Add graveyard
   - [x] restructure by merging pieces and cards
   - [x] Add the ability to move pieces wherever
   - [x] Add library to draw from
