@@ -40,6 +40,7 @@ python main.py
 ```
 ## Note
 This will only work when the server is up which it will not be most of the time so DM before you try. Also the server only accepts 2 clients RN
+The images are not attached so If you want them DM for them as well.
 
 # TODO:
   - [ ] Add tap for pieces and untap button
