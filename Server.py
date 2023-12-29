@@ -34,7 +34,7 @@ class Server:
                 threading.Thread(target=self.threaded_client, args=(conn,)).start()
             except socket.timeout:
                 print("no clients found")
-                sleep(5)
+                sleep(1)
             
     def threaded_client(self, conn):
         client_id = self.free_id
@@ -76,7 +76,6 @@ class Server:
             case "Draw":
                 self.handle_draw(client_id, conn)
             case "Click":
-                print(unsplit_message)
                 self.add_to_do(f"{client_id}::{unsplit_message}", client_id)
                 confirmation_needed = True
             case "todo":

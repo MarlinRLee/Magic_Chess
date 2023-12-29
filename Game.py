@@ -144,7 +144,7 @@ class Game:
             id, server_msg = reply.split("::")
             self.process_server_message(id, server_msg)
             
-
+    
     def process_server_message(self, id, message):
         msg = message.split(",,,")
         match msg[0]:
